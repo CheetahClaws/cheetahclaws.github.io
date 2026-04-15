@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheetahClaws — Fast Personal AI Assistant for Any Model</title>
+    <meta name="description" content="CheetahClaws: A fast, easy-to-use, Python-native personal AI assistant supporting Claude, GPT, Gemini, Ollama, and 200+ models. Open source, runs locally.">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #111111;
+            --bg-code: #1a1a2e;
+            --text: #e4e4e7;
+            --text-dim: #a1a1aa;
+            --accent: #22d3ee;
+            --accent2: #a78bfa;
+            --accent3: #34d399;
+            --border: #27272a;
+            --gradient: linear-gradient(135deg, #22d3ee 0%, #a78bfa 50%, #f472b6 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── Nav ─────────────────────────────────── */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+        }
+        nav .inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        nav .logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        nav .links { display: flex; gap: 2rem; }
+        nav .links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        nav .links a:hover { color: var(--accent); }
+        nav .cta-btn {
+            background: var(--accent);
+            color: #000;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        nav .cta-btn:hover { opacity: 0.85; }
+
+        /* ── Hero ────────────────────────────────── */
+        .hero {
+            padding: 10rem 2rem 6rem;
+            text-align: center;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(ellipse, rgba(34,211,238,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero .badge {
+            display: inline-block;
+            background: rgba(34,211,238,0.1);
+            border: 1px solid rgba(34,211,238,0.3);
+            color: var(--accent);
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero h1 .gradient {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+        .hero .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(34,211,238,0.3);
+        }
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text);
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s;
+        }
+        .btn-secondary:hover { border-color: var(--accent); }
+
+        /* ── Install bar ─────────────────────────── */
+        .install-bar {
+            max-width: 600px;
+            margin: 2.5rem auto 0;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .install-bar code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent3);
+        }
+        .install-bar button {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .install-bar button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ── Demo ────────────────────────────────── */
+        .demo {
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+        .demo img, .demo video {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        /* ── Section ─────────────────────────────── */
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+        section h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        section .subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        /* ── Feature grid ────────────────────────── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+        .feature-card .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .feature-card p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* ── Providers ───────────────────────────── */
+        .providers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .provider-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            transition: border-color 0.2s;
+        }
+        .provider-chip:hover { border-color: var(--accent2); color: var(--text); }
+
+        /* ── Code example ────────────────────────── */
+        .code-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+        .code-block .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.8rem;
+        }
+        .code-block pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: var(--text);
+        }
+        .code-block .comment { color: #6b7280; }
+        .code-block .cmd { color: var(--accent3); }
+        .code-block .output { color: var(--text-dim); }
+        .code-block .highlight { color: var(--accent); }
+
+        .code-desc {
+            padding-top: 1rem;
+        }
+        .code-desc h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .code-desc p {
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+        .code-desc ul {
+            list-style: none;
+            padding: 0;
+        }
+        .code-desc ul li {
+            padding: 0.5rem 0;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        .code-desc ul li::before {
+            content: '>';
+            color: var(--accent);
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        /* ── Stats ───────────────────────────────── */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+            padding: 4rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .stat-num {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 0.3rem;
+        }
+
+        /* ── CTA ─────────────────────────────────── */
+        .cta-section {
+            text-align: center;
+            padding: 8rem 2rem;
+            position: relative;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(167,139,250,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .cta-section p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Footer ──────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* ── Responsive ──────────────────────────── */
+        /* ── Lightbox overlay ─────────────────────── */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 999;
+            cursor: zoom-out;
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img {
+            max-width: 92%;
+            max-height: 92%;
+            border-radius: 12px;
+            box-shadow: 0 0 60px rgba(34,211,238,0.2);
+        }
+        .lightbox .close-btn {
+            position: absolute;
+            top: 1.5rem; right: 2rem;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .lightbox .close-btn:hover { opacity: 1; }
+
+        /* Demo images zoomable */
+        .feature-card img, .demo img {
+            cursor: zoom-in;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .feature-card img:hover, .demo img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 30px rgba(34,211,238,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .code-section { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            nav .links { display: none; }
+            .install-bar { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+    <div class="inner">
+        <a href="#" class="logo"><img src="logo.png" alt="CheetahClaws" style="height:36px;"></a>
+        <div class="links">
+            <a href="#features">Features</a>
+            <a href="#models">Models</a>
+            <a href="#examples">Examples</a>
+            <a href="#tools">Tools</a>
+            <a href="https://github.com/SafeRL-Lab/cheetahclaws" target="_blank">GitHub</a>
+        </div>
+        <a class="cta-btn" href="https://github.com/SafeRL-Lab/cheetahclaws">Star on GitHub</a>
+    </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="badge">Open Source &middot; Python &middot; Any Model</div>
+    <h1>
+        The <span class="gradient">Fast Personal AI Assistant</span> That Works With Any Model
+    </h1>
+    <p>
+        Claude, GPT, Gemini, DeepSeek, Ollama, or your own endpoint.
+        One tool, every model, fully hackable in Python.
+    </p>
+    <div class="actions">
+        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws">Get Started</a>
+        <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/recipes.md">View Recipes</a>
+    </div>
+    <div class="install-bar">
+        <code id="install-cmd">curl -fsSL https://raw.githubusercontent.com/SafeRL-Lab/cheetahclaws/main/scripts/install.sh | bash</code>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('install-cmd').innerText); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
+    </div>
+</div>
+
+<!-- Demo GIF -->
+<div class="demo">
+    <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/demo.gif" alt="CheetahClaws demo — task execution in terminal">
+</div>
+
+<!-- Stats -->
+<section>
+    <div class="stats">
+        <div>
+            <div class="stat-num">33+</div>
+            <div class="stat-label">Built-in Tools</div>
+        </div>
+        <div>
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Model Providers</div>
+        </div>
+        <div>
+            <div class="stat-num">40K</div>
+            <div class="stat-label">Lines of Python</div>
+        </div>
+        <div>
+            <div class="stat-num">341+</div>
+            <div class="stat-label">Tests Passing</div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+    <h2>Everything You Need</h2>
+    <p class="subtitle">A complete AI coding assistant that runs in your terminal, works with any model, and extends with plugins.</p>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="icon">&#9889;</div>
+            <h3>Multi-Provider</h3>
+            <p>Claude, GPT-4o, Gemini, DeepSeek, Qwen, Kimi, MiniMax, Ollama, or any OpenAI-compatible endpoint. Switch with <code>/model</code>.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128187;</div>
+            <h3>33 Built-in Tools</h3>
+            <p>Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebBrowse, ReadPDF, ReadEmail, NotebookEdit, and more — all callable by the AI.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128101;</div>
+            <h3>Multi-Agent</h3>
+            <p>Spawn specialized sub-agents (coder, reviewer, researcher) in parallel with git worktree isolation. Background execution with named addressing.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128241;</div>
+            <h3>Remote Control</h3>
+            <p>Control from your phone via Telegram, WeChat, or Slack bridges. Job queues, slash commands, and live tool tracking.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128274;</div>
+            <h3>Security</h3>
+            <p>Permission system (auto/manual/plan modes), prompt injection detection, credential filtering in /config, safe stdio wrapper.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128640;</div>
+            <h3>Autonomous Agents</h3>
+            <p>Launch research assistants, bug fixers, paper writers, and auto-coders that run independently. 4 built-in templates + custom.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#127911;</div>
+            <h3>Voice Input</h3>
+            <p>Record, transcribe, auto-submit. Offline Whisper — no API key, no subscription. 99 languages.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128218;</div>
+            <h3>PDF, Excel, Email</h3>
+            <p>Read PDFs, OCR images, parse spreadsheets, read and send emails — all via natural language commands.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128268;</div>
+            <h3>Plugin System</h3>
+            <p>Install plugins from git URLs. Extend with custom tools, commands, skills, and MCP servers. Full authoring guide included.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Models -->
+<section id="models">
+    <h2>Works With Every Model</h2>
+    <p class="subtitle">10+ providers, 200+ models. Cloud or local — your choice.</p>
+    <div class="providers">
+        <span class="provider-chip">Anthropic Claude</span>
+        <span class="provider-chip">OpenAI GPT-4o / GPT-5</span>
+        <span class="provider-chip">Google Gemini</span>
+        <span class="provider-chip">DeepSeek</span>
+        <span class="provider-chip">Alibaba Qwen</span>
+        <span class="provider-chip">Moonshot Kimi</span>
+        <span class="provider-chip">Zhipu GLM</span>
+        <span class="provider-chip">MiniMax</span>
+        <span class="provider-chip">Ollama (local)</span>
+        <span class="provider-chip">LM Studio</span>
+        <span class="provider-chip">vLLM</span>
+        <span class="provider-chip">Any OpenAI-compatible</span>
+    </div>
+</section>
+
+<!-- Examples -->
+<section id="examples">
+    <h2>See It in Action</h2>
+    <p class="subtitle">Real workflows, real productivity gains.</p>
+
+    <div class="code-section" style="margin-bottom:3rem">
+        <div class="code-block">
+            <div class="label">Code Review with Local Model</div>
+<pre><span class="comment"># Free, private, nothing leaves your machine</span>
+<span class="cmd">$ cheetahclaws --model ollama/qwen2.5-coder</span>
+
+<span class="output">[project] 12% &raquo;</span> <span class="highlight">Review src/api.py for security
+issues and performance problems.</span>
+
+<span class="output">I'll analyze the file...</span>
+<span class="output">[Read] src/api.py (142 lines)</span>
+<span class="output">[Grep] SQL injection patterns...</span>
+
+<span class="output">Found 3 issues:</span>
+<span class="output">1. Line 42: SQL injection via f-string</span>
+<span class="output">2. Line 78: Missing rate limiting</span>
+<span class="output">3. Line 95: Unvalidated redirect</span></pre>
+        </div>
+        <div class="code-desc">
+            <h3>Local Code Review</h3>
+            <p>Run entirely offline with Ollama. Your code never leaves your machine. The AI reads files, searches for patterns, and gives actionable feedback.</p>
+            <ul>
+                <li>Zero cloud, zero API cost</li>
+                <li>Works with any Ollama model</li>
+                <li>Context-aware (reads your project files)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="code-section" style="margin-bottom:3rem">
+        <div class="code-desc">
+            <h3>Remote Control via Telegram</h3>
+            <p>Control CheetahClaws from your phone while it runs on your workstation. Send commands, get results, manage tasks.</p>
+            <ul>
+                <li>Full slash command passthrough</li>
+                <li>Job queue when AI is busy</li>
+                <li>Also works with WeChat and Slack</li>
+            </ul>
+        </div>
+        <div class="code-block">
+            <div class="label">Phone &rarr; Server</div>
+<pre><span class="comment"># You (Telegram):</span>
+<span class="highlight">What files changed in the last commit?</span>
+
+<span class="comment"># CheetahClaws:</span>
+<span class="output">[Bash] git log --oneline -1</span>
+<span class="output">[Bash] git diff HEAD~1 --stat</span>
+
+<span class="output">Last commit: "fix auth middleware"</span>
+<span class="output">  3 files changed:</span>
+<span class="output">  - src/auth.py (+12 -5)</span>
+<span class="output">  - tests/test_auth.py (+28)</span>
+<span class="output">  - config.yaml (+1)</span>
+
+<span class="comment"># You:</span>
+<span class="highlight">Fix the type error on line 42</span>
+<span class="comment"># CheetahClaws edits the file...</span></pre>
+        </div>
+    </div>
+
+    <div class="code-section">
+        <div class="code-block">
+            <div class="label">Email + PDF + Excel</div>
+<pre><span class="output">[project] &raquo;</span> <span class="highlight">Read the contract at
+~/Documents/contract.pdf and summarize
+the key payment terms.</span>
+
+<span class="output">[ReadPDF] contract.pdf (24 pages)</span>
+
+<span class="output">Key payment terms:</span>
+<span class="output">1. Net 30 payment cycle</span>
+<span class="output">2. 2% early payment discount</span>
+<span class="output">3. Late fee: 1.5% monthly</span>
+
+<span class="output">[project] &raquo;</span> <span class="highlight">Check my latest emails from
+accounting@company.com</span>
+
+<span class="output">[ReadEmail] 3 emails found</span>
+<span class="output">1. "Invoice #4521" - Apr 14</span>
+<span class="output">2. "Q1 Report attached" - Apr 10</span>
+<span class="output">3. "Budget approval" - Apr 8</span></pre>
+        </div>
+        <div class="code-desc">
+            <h3>Beyond Code</h3>
+            <p>Read PDFs, parse Excel spreadsheets, OCR images, read and send emails — all through natural language.</p>
+            <ul>
+                <li>PDF text extraction (50+ pages)</li>
+                <li>OCR in 99 languages</li>
+                <li>Excel/CSV with formatted tables</li>
+                <li>IMAP inbox reading + SMTP sending</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- More demos -->
+<section id="tools">
+    <h2>More Demos</h2>
+    <p class="subtitle">See the full range of capabilities.</p>
+    <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="feature-card">
+            <h3>Multi-Agent Brainstorm</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Spawn expert personas to debate and synthesize ideas</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/brainstorm_demo.gif" alt="Brainstorm demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Autonomous Agent Mode</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Agent works proactively in the background without prompts</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/proactive_demo.gif" alt="Proactive demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>SSJ Developer Power Menu</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">14 workflow shortcuts: brainstorm, review, commit, and more</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/ssj_demo.gif" alt="SSJ demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Remote Control from Telegram</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Control your agent from your phone — send tasks, get results</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/telegram_demo.gif" alt="Telegram remote control demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Remote Control from WeChat</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Control your agent from WeChat (微信) — scan QR, start chatting</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/wechat_demo.gif" alt="WeChat remote control demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Remote Control from Slack</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Control your agent from a Slack channel — team-friendly</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/slack_demo.gif" alt="Slack remote control demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Plan Mode</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Analyze codebase in read-only mode, write a plan, then implement</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/plan_demo.gif" alt="Plan mode demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Multi-Agent Sub-Tasks</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Spawn parallel sub-agents with git worktree isolation</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/subagent_demo.gif" alt="Sub-agent demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Persistent Memory</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Save and recall facts, preferences, and decisions across sessions</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/memory_demo.gif" alt="Memory demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Multi-Model Switching</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Switch between Claude, GPT, Gemini, Ollama mid-conversation</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/multimodel_demo.gif" alt="Multi-model demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Checkpoint & Rewind</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Auto-snapshot every turn — rewind files and conversation to any point</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/checkpoint_demo.gif" alt="Checkpoint demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Voice Input</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Speak your prompt — offline Whisper transcription, 99 languages</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/voice_demo.gif" alt="Voice input demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Vision Input</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Paste an image and ask questions — works with local and cloud models</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/image_demo.gif" alt="Vision input demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>AI Video Factory</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Generate videos: story &rarr; TTS narration &rarr; AI images &rarr; subtitles &rarr; MP4</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/video_demo.gif" alt="Video factory demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Worker — Auto-Implement Tasks</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Automatically implement TODO items from brainstorm output</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/worker_demo.gif" alt="Worker demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Tmux Terminal Control</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Split panes, run long tasks, capture output — 11 tmux tools</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/tmux_demo.gif" alt="Tmux demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Cloud Session Sync</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Backup conversations to GitHub Gist — resume from any machine</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/cloudsave_demo.gif" alt="Cloud sync demo" style="width:100%;border-radius:8px;">
+        </div>
+        <div class="feature-card">
+            <h3>Shell Escape</h3>
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Run any shell command inline with !command — git, ls, python, etc.</p>
+            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/shell_escape_demo.gif" alt="Shell escape demo" style="width:100%;border-radius:8px;">
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+    <h2>Start Building in <span style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">30 Seconds</span></h2>
+    <p>One command to install. First run guides you through setup. No build step, no daemon, no subscription.</p>
+    <div class="actions" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws">Get Started</a>
+        <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/reference.md">Read the Docs</a>
+        <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/CONTRIBUTING.md">Contribute</a>
+    </div>
+    <div class="install-bar" style="margin-top:2rem;max-width:600px;margin-left:auto;margin-right:auto;">
+        <code>pip install git+https://github.com/SafeRL-Lab/cheetahclaws.git && cheetahclaws --setup</code>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>
+        CheetahClaws is open source under the Apache-2.0 license.
+        Created by <a href="https://github.com/SafeRL-Lab">SAIL Lab (UC Berkeley)</a>.
+    </p>
+    <p style="margin-top:0.5rem;">
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws">GitHub</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/recipes.md">Recipes</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/CONTRIBUTING.md">Contributing</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws/issues">Issues</a>
+    </p>
+    <p style="margin-top:1rem;">
+        Interested in collaborating or have questions? Contact us: <a href="mailto:shangding.gu@berkeley.edu">shangding.gu@berkeley.edu</a>
+    </p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close-btn">&times;</span>
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+// Lightbox: click any demo/feature image to enlarge
+document.querySelectorAll('.feature-card img, .demo img').forEach(img => {
+    img.addEventListener('click', e => {
+        e.stopPropagation();
+        document.getElementById('lightbox-img').src = img.src;
+        document.getElementById('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+});
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+});
+</script>
+
+</body>
+</html>
