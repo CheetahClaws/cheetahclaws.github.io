@@ -15,13 +15,36 @@
             --bg: #0a0a0a;
             --bg-card: #111111;
             --bg-code: #1a1a2e;
+            --bg-nav: rgba(10,10,10,0.85);
             --text: #e4e4e7;
             --text-dim: #a1a1aa;
             --accent: #22d3ee;
             --accent2: #a78bfa;
             --accent3: #34d399;
             --border: #27272a;
+            --shadow-strong: 0 20px 60px rgba(0,0,0,0.5);
+            --shadow-soft: 0 8px 30px rgba(34,211,238,0.3);
+            --check: #34d399;
+            --cross: #f87171;
             --gradient: linear-gradient(135deg, #22d3ee 0%, #a78bfa 50%, #f472b6 100%);
+        }
+
+        [data-theme="light"] {
+            --bg: #ffffff;
+            --bg-card: #f9fafb;
+            --bg-code: #f3f4f6;
+            --bg-nav: rgba(255,255,255,0.85);
+            --text: #18181b;
+            --text-dim: #52525b;
+            --accent: #0891b2;
+            --accent2: #7c3aed;
+            --accent3: #059669;
+            --border: #e4e4e7;
+            --shadow-strong: 0 20px 60px rgba(0,0,0,0.08);
+            --shadow-soft: 0 8px 30px rgba(8,145,178,0.18);
+            --check: #059669;
+            --cross: #dc2626;
+            --gradient: linear-gradient(135deg, #0891b2 0%, #7c3aed 50%, #db2777 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,6 +55,7 @@
             color: var(--text);
             line-height: 1.6;
             overflow-x: hidden;
+            transition: background 0.25s ease, color 0.25s ease;
         }
 
         /* ── Nav ─────────────────────────────────── */
@@ -40,11 +64,38 @@
             top: 0;
             width: 100%;
             z-index: 100;
-            background: rgba(10,10,10,0.85);
+            background: var(--bg-nav);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 0 2rem;
+            transition: background 0.25s ease, border-color 0.25s ease;
         }
+        nav .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: border-color 0.2s, transform 0.2s, background 0.25s, color 0.25s;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: rotate(15deg);
+        }
+        .theme-toggle .icon-sun { display: none; }
+        [data-theme="light"] .theme-toggle .icon-sun { display: inline; }
+        [data-theme="light"] .theme-toggle .icon-moon { display: none; }
         nav .inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -147,7 +198,7 @@
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(34,211,238,0.3);
+            box-shadow: var(--shadow-soft);
         }
         .btn-secondary {
             background: var(--bg-card);
@@ -205,7 +256,7 @@
             width: 100%;
             border-radius: 16px;
             border: 1px solid var(--border);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            box-shadow: var(--shadow-strong);
         }
 
         /* ── Section ─────────────────────────────── */
@@ -442,11 +493,115 @@
             box-shadow: 0 8px 30px rgba(34,211,238,0.15);
         }
 
+        /* ── Comparison ──────────────────────────── */
+        .compare-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--bg-card);
+        }
+        table.compare {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+            min-width: 720px;
+        }
+        table.compare th,
+        table.compare td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        table.compare thead th {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: var(--bg-code);
+        }
+        table.compare thead th.highlight-col {
+            color: var(--accent);
+        }
+        table.compare tbody th {
+            font-weight: 600;
+            color: var(--text);
+            width: 22%;
+        }
+        table.compare td {
+            color: var(--text-dim);
+        }
+        table.compare td.highlight-col {
+            color: var(--text);
+            background: rgba(34,211,238,0.04);
+        }
+        [data-theme="light"] table.compare td.highlight-col {
+            background: rgba(8,145,178,0.06);
+        }
+        table.compare tr:last-child th,
+        table.compare tr:last-child td { border-bottom: none; }
+        .check { color: var(--check); font-weight: 700; }
+        .cross { color: var(--cross); font-weight: 700; }
+
+        .compare-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+        .compare-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.75rem;
+        }
+        .compare-card.featured {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+        .compare-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+        .compare-card .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+        .compare-card p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .compare-card ul { list-style: none; padding: 0; }
+        .compare-card ul li {
+            padding: 0.35rem 0;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+        .compare-card ul li::before {
+            content: '✓';
+            color: var(--check);
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+        .compare-card ul li.no::before {
+            content: '✗';
+            color: var(--cross);
+        }
+
         @media (max-width: 768px) {
             .code-section { grid-template-columns: 1fr; }
             .stats { grid-template-columns: repeat(2, 1fr); }
             nav .links { display: none; }
             .install-bar { flex-direction: column; text-align: center; }
+            .compare-cards { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -461,9 +616,16 @@
             <a href="#models">Models</a>
             <a href="#examples">Examples</a>
             <a href="#tools">Tools</a>
+            <a href="#compare">Compare</a>
             <a href="https://github.com/SafeRL-Lab/cheetahclaws" target="_blank">GitHub</a>
         </div>
-        <a class="cta-btn" href="https://github.com/SafeRL-Lab/cheetahclaws">Star on GitHub</a>
+        <div class="nav-right">
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+                <span class="icon-moon">&#9789;</span>
+                <span class="icon-sun">&#9728;</span>
+            </button>
+            <a class="cta-btn" href="https://github.com/SafeRL-Lab/cheetahclaws">Star on GitHub</a>
+        </div>
     </div>
 </nav>
 
@@ -791,6 +953,141 @@ accounting@company.com</span>
     </div>
 </section>
 
+<!-- Comparison -->
+<section id="compare">
+    <h2>How CheetahClaws Compares</h2>
+    <p class="subtitle">All three are personal AI assistants — but they aim at different goals. Here's where CheetahClaws stands out vs. <a href="https://github.com/openclaw/openclaw" target="_blank" style="color:var(--accent2);text-decoration:none;">OpenClaw</a> and <a href="https://www.anthropic.com/claude-code" target="_blank" style="color:var(--accent2);text-decoration:none;">Claude Code</a>.</p>
+
+    <div class="compare-wrap">
+        <table class="compare">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="highlight-col">CheetahClaws</th>
+                    <th>OpenClaw</th>
+                    <th>Claude Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Primary focus</th>
+                    <td class="highlight-col">Coding &amp; productivity assistant for terminal + web</td>
+                    <td>Multi-channel messaging assistant (WhatsApp, iMessage, Slack…)</td>
+                    <td>Coding assistant tightly coupled to Claude API</td>
+                </tr>
+                <tr>
+                    <th>Language &amp; runtime</th>
+                    <td class="highlight-col">Python 3.10–3.13, ~40K LOC, fully readable</td>
+                    <td>TypeScript / Node.js 22+</td>
+                    <td>TypeScript / Node.js (compiled, ~12 MB minified)</td>
+                </tr>
+                <tr>
+                    <th>Model providers</th>
+                    <td class="highlight-col"><span class="check">✓</span> 10+ providers, 200+ models — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, GLM, MiniMax, Ollama, vLLM, LM Studio</td>
+                    <td>Cloud-first, primarily one frontier provider</td>
+                    <td><span class="cross">✗</span> Anthropic Claude only</td>
+                </tr>
+                <tr>
+                    <th>Local / offline models</th>
+                    <td class="highlight-col"><span class="check">✓</span> Native Ollama / vLLM / LM Studio with streaming &amp; tool-calling</td>
+                    <td>Limited; cloud-first design</td>
+                    <td><span class="cross">✗</span> None — requires Anthropic API</td>
+                </tr>
+                <tr>
+                    <th>Switch model mid-chat</th>
+                    <td class="highlight-col"><span class="check">✓</span> <code>/model</code> swaps any provider live</td>
+                    <td>Limited</td>
+                    <td><span class="cross">✗</span> Claude variants only</td>
+                </tr>
+                <tr>
+                    <th>Built-in tools</th>
+                    <td class="highlight-col"><span class="check">✓</span> 33 tools — Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebBrowse, ReadPDF, ReadEmail, NotebookEdit…</td>
+                    <td>Channel &amp; messaging tools</td>
+                    <td>~15 core file/shell/web tools</td>
+                </tr>
+                <tr>
+                    <th>Remote control (phone/chat)</th>
+                    <td class="highlight-col"><span class="check">✓</span> Telegram, WeChat, Slack bridges with job queue</td>
+                    <td><span class="check">✓</span> 22+ channels (its core strength)</td>
+                    <td><span class="cross">✗</span> Terminal / IDE only</td>
+                </tr>
+                <tr>
+                    <th>Voice input (offline)</th>
+                    <td class="highlight-col"><span class="check">✓</span> Offline Whisper, 99 languages, no API key</td>
+                    <td>Speak / listen on macOS / iOS / Android</td>
+                    <td><span class="cross">✗</span> Not built-in</td>
+                </tr>
+                <tr>
+                    <th>PDF / Excel / Email tools</th>
+                    <td class="highlight-col"><span class="check">✓</span> ReadPDF, OCR, Excel, IMAP / SMTP — all native</td>
+                    <td>Via channel integrations</td>
+                    <td><span class="cross">✗</span> Bring your own</td>
+                </tr>
+                <tr>
+                    <th>Multi-agent &amp; sub-agents</th>
+                    <td class="highlight-col"><span class="check">✓</span> Parallel sub-agents with git-worktree isolation, 4 autonomous templates</td>
+                    <td>Limited</td>
+                    <td><span class="check">✓</span> Task / sub-agent system</td>
+                </tr>
+                <tr>
+                    <th>Hackability</th>
+                    <td class="highlight-col"><span class="check">✓</span> Plain Python — read it, fork it, write a plugin in an afternoon</td>
+                    <td>TypeScript monorepo, larger surface area</td>
+                    <td><span class="cross">✗</span> Closed source binary; source is reverse-engineered</td>
+                </tr>
+                <tr>
+                    <th>License</th>
+                    <td class="highlight-col">Apache 2.0 — fully open</td>
+                    <td>MIT — fully open</td>
+                    <td>Proprietary (Anthropic)</td>
+                </tr>
+                <tr>
+                    <th>Cost</th>
+                    <td class="highlight-col">Free — pay only your model provider (or $0 with Ollama)</td>
+                    <td>Free + your model API</td>
+                    <td>Bundled with Anthropic API / subscription</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="compare-cards">
+        <div class="compare-card featured">
+            <div class="tag">Our pitch</div>
+            <h3>CheetahClaws</h3>
+            <p>Pick any model, run anywhere, hack the source. The fastest path from "I want an AI to do X" to actually doing it.</p>
+            <ul>
+                <li>Any model — cloud or local</li>
+                <li>33 built-in tools out of the box</li>
+                <li>Phone, voice, PDF, email — all native</li>
+                <li>Pure Python, easy to extend</li>
+            </ul>
+        </div>
+        <div class="compare-card">
+            <div class="tag">Different goal</div>
+            <h3>OpenClaw</h3>
+            <p>A messaging-first assistant. Great if you want one bot answering you across 22+ chat platforms.</p>
+            <ul>
+                <li>Multi-channel chat reach</li>
+                <li>Mobile-first (iOS / Android / macOS)</li>
+                <li class="no">Less focused on coding workflows</li>
+                <li class="no">Cloud-first, limited local-model support</li>
+            </ul>
+        </div>
+        <div class="compare-card">
+            <div class="tag">Claude only</div>
+            <h3>Claude Code</h3>
+            <p>Anthropic's official terminal coding agent. Polished, but locked to one vendor and one language.</p>
+            <ul>
+                <li>First-party Claude features</li>
+                <li>Tight Anthropic API integration</li>
+                <li class="no">Locked to Anthropic models</li>
+                <li class="no">No local models, no remote channels</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
 <!-- CTA -->
 <div class="cta-section">
     <h2>Start Building in <span style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">30 Seconds</span></h2>
@@ -847,6 +1144,26 @@ function closeLightbox() {
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeLightbox();
 });
+
+// Theme toggle: dark <-> light, persisted in localStorage
+(function() {
+    const root = document.documentElement;
+    const stored = localStorage.getItem('cc-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    const initial = stored || (prefersLight ? 'light' : 'dark');
+    if (initial === 'light') root.setAttribute('data-theme', 'light');
+
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            const next = current === 'light' ? 'dark' : 'light';
+            if (next === 'light') root.setAttribute('data-theme', 'light');
+            else root.removeAttribute('data-theme');
+            localStorage.setItem('cc-theme', next);
+        });
+    }
+})();
 </script>
 
 </body>
