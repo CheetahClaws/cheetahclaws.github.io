@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Hub · CheetahClaws</title>
+    <meta name="description" content="CheetahClaws documentation: installation, recipes, reference, plugin authoring, bridges (Telegram/WeChat/Slack), Docker, web UI, voice & video, research, trading agent, and 27 design RFCs for the Agent-OS kernel.">
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <link rel="canonical" href="https://cheetahclaws.github.io/docs.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CheetahClaws Documentation Hub">
+    <meta property="og:description" content="Every guide in one place — installation, recipes, plugin authoring, bridges, Docker, web UI, research, trading, RFCs.">
+    <meta property="og:url" content="https://cheetahclaws.github.io/docs.html">
+    <meta property="og:image" content="https://cheetahclaws.github.io/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav>
+    <div class="inner">
+        <a href="index.html" class="logo" aria-label="CheetahClaws home">
+            <img src="logo.png" alt="CheetahClaws" style="height:36px;">
+            <span class="version-chip"><span class="dot"></span>v3.05.79</span>
+        </a>
+        <div class="links" id="nav-links">
+            <a href="index.html#whats-new">What's New</a>
+            <a href="research-lab.html">Research Lab</a>
+            <a href="agent-os.html">Agent-OS</a>
+            <a href="docs.html" class="active">Docs</a>
+            <a href="index.html#compare">Compare</a>
+            <a href="index.html#faq">FAQ</a>
+        </div>
+        <div class="nav-right">
+            <span class="lang-switcher" aria-label="Language">
+                <a href="https://github.com/SafeRL-Lab/cheetahclaws" target="_blank" rel="noopener" title="English">EN</a>
+                <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/i18n/README.CN.MD" target="_blank" rel="noopener" title="中文">中</a>
+            </span>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+                <span class="icon-moon">&#9789;</span>
+                <span class="icon-sun">&#9728;</span>
+            </button>
+            <a class="cta-btn" href="https://github.com/SafeRL-Lab/cheetahclaws">Star on GitHub</a>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
+        </div>
+    </div>
+</nav>
+
+<main id="main">
+
+<div class="doc-hero">
+    <span class="eyebrow">Documentation Hub</span>
+    <h1>Everything You Need to <span class="gradient">Build &amp; Operate</span></h1>
+    <p class="lede">
+        Every guide CheetahClaws ships. Start with recipes, learn the slash-command surface in the reference, or dive into design notes via the RFC index.
+    </p>
+    <div class="actions">
+        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/recipes.md" target="_blank" rel="noopener">Recipes</a>
+        <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/reference.md" target="_blank" rel="noopener">Reference</a>
+    </div>
+</div>
+
+<section style="padding-top: 2rem;">
+    <h2>Get Started</h2>
+    <p class="subtitle">Read these first — three guides take you from zero to productive.</p>
+    <div class="features-grid">
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws#installation" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128640;</div>
+            <h3>Installation</h3>
+            <p>curl one-liner, pip, uv, Docker, or run-from-source. <code>cheetahclaws --setup</code> walks you through provider config on first run.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/recipes.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128393;</div>
+            <h3>Recipes</h3>
+            <p>Copy-paste workflows: code review, refactor, bug fix, brainstorm, research, video factory, trading agent, multi-agent pipelines.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/reference.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128214;</div>
+            <h3>Reference</h3>
+            <p>Every slash command, environment variable, config key, and tool — with examples. The definitive lookup table.</p>
+        </a>
+    </div>
+</section>
+
+<section>
+    <h2>Feature Guides</h2>
+    <p class="subtitle">Deep dives into individual features.</p>
+    <div class="features-grid">
+        <a class="feature-card" href="research-lab.html" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128300;</div>
+            <h3>Research Lab</h3>
+            <p>Autonomous multi-day research with 9 specialised agents, sandboxed experiments, citation verification. Targets arXiv-grade preprint quality.</p>
+        </a>
+        <a class="feature-card" href="agent-os.html" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#129504;</div>
+            <h3>Agent-OS Kernel</h3>
+            <p>The <code>cc_kernel/</code> layer: process table, capability model, quota ledger, scheduler, mailbox, AgentFS. 27 RFCs · 1,771 tests.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/research.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#127759;</div>
+            <h3>Research Pipeline</h3>
+            <p><code>/research &lt;topic&gt;</code> — parallel fan-out across 20 sources (arXiv, Semantic Scholar, HuggingFace, HackerNews, GitHub, 知乎, B站, 微博, 小红书…) with cross-platform attention heat tables.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/bridges.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128241;</div>
+            <h3>Bridges</h3>
+            <p>Telegram, WeChat (微信), Slack — control your agent from any chat platform. Job queue, file round-trip, slash-command passthrough, pickable permission prompts.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/web-ui.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#127760;</div>
+            <h3>Web Chat UI</h3>
+            <p>Browser chat — sessions sidebar, folders, drag-drop, batch export, multi-user auth (bcrypt + JWT), live tool tracking, markdown streaming.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/docker.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128034;</div>
+            <h3>Docker / Home-Server</h3>
+            <p>One-command deploy via <code>docker-compose up</code>. 24/7 daemon mode, multi-user auth, ops endpoints, persistence.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/brainstorm.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128173;</div>
+            <h3>Brainstorm &amp; Worker</h3>
+            <p><code>/brainstorm</code> — multi-persona adversarial debate. <code>/worker</code> — auto-implement TODO items from brainstorm output.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/voice-and-video.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#127908;</div>
+            <h3>Voice &amp; Video</h3>
+            <p>Offline Whisper input (99 languages). TTS factory (Gemini / ElevenLabs / Edge). AI video pipeline: story → narration → images → subtitles → MP4.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/trading.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128202;</div>
+            <h3>Trading Agent</h3>
+            <p>Multi-agent market analysis with backtesting, memory, and signal execution. Strictly research/paper-trading — not financial advice.</p>
+        </a>
+    </div>
+</section>
+
+<section>
+    <h2>Extend &amp; Operate</h2>
+    <p class="subtitle">Building on top of CheetahClaws.</p>
+    <div class="features-grid">
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/plugin-authoring.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128268;</div>
+            <h3>Plugin Authoring</h3>
+            <p>Add custom tools, slash commands, skills, and MCP servers. Distribute via any git URL. Discoverable through <code>CHEETAHCLAWS_PLUGIN_PATH</code>.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/extensions.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128279;</div>
+            <h3>MCP &amp; Extensions</h3>
+            <p>Model Context Protocol over stdio, HTTP, or SSE with OAuth 2.0 PKCE for enterprise SSO. Connect any MCP-compatible server.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/advanced.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#9881;</div>
+            <h3>Advanced Configuration</h3>
+            <p><code>/config</code> keys, environment variables, <code>CLAUDE.md</code> context injection, permission modes, credential filtering.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/tree/main/docs/RFC" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128221;</div>
+            <h3>RFC Index</h3>
+            <p>27 design notes (0001 – 0032) covering capability model, sandbox, scheduler, mailbox, AgentFS, observability, tool dispatch, streaming. Each with acceptance criteria.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/news.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#128240;</div>
+            <h3>News / Changelog</h3>
+            <p>Every release, every fix, every new feature. Updated multiple times per week — the live pulse of the project.</p>
+        </a>
+        <a class="feature-card" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+            <div class="icon">&#129309;</div>
+            <h3>Contributing</h3>
+            <p>How to file issues, propose RFCs, run tests (1,900+ passing), and ship PRs. Multi-language community welcome.</p>
+        </a>
+    </div>
+</section>
+
+<div class="cta-section">
+    <h2>Can't Find What You Need?</h2>
+    <p>Use the search box (<kbd>/</kbd>), open an issue, or ping the team.</p>
+    <div class="actions" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws/issues" target="_blank" rel="noopener">Open an Issue</a>
+        <a class="btn-secondary" href="mailto:shangding.gu@berkeley.edu">Email the Team</a>
+    </div>
+</div>
+
+</main>
+
+<footer>
+    <p>
+        CheetahClaws is open source under the Apache-2.0 license.
+        Created by <a href="https://github.com/SafeRL-Lab">SAIL Lab (UC Berkeley)</a>.
+    </p>
+    <p style="margin-top:0.5rem;">
+        <a href="index.html">Home</a> &middot;
+        <a href="research-lab.html">Research Lab</a> &middot;
+        <a href="agent-os.html">Agent-OS</a> &middot;
+        <a href="docs.html">Docs</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws">GitHub</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws/issues">Issues</a>
+    </p>
+    <p style="margin-top:1rem;">
+        Contact: <a href="mailto:shangding.gu@berkeley.edu">shangding.gu@berkeley.edu</a>
+    </p>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

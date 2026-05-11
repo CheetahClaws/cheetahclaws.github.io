@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Lab — Autonomous Multi-Agent Paper Writing · CheetahClaws</title>
+    <meta name="description" content="Research Lab: 9-agent autonomous pipeline (PI, Engineer, Reviewer×3, …) that drives a research topic through questioning, literature survey, sandboxed Python experiments, citation verification, and reviewer-author iteration. Targets arXiv-grade preprint quality.">
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <link rel="canonical" href="https://cheetahclaws.github.io/research-lab.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="CheetahClaws Research Lab — Autonomous Multi-Agent Paper Writing">
+    <meta property="og:description" content="9 specialised agents drive a topic through 9 stages: questioning → survey → outline → code → sandboxed experiments → analysis → drafting → reviewer iteration → finalisation.">
+    <meta property="og:url" content="https://cheetahclaws.github.io/research-lab.html">
+    <meta property="og:image" content="https://cheetahclaws.github.io/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav>
+    <div class="inner">
+        <a href="index.html" class="logo" aria-label="CheetahClaws home">
+            <img src="logo.png" alt="CheetahClaws" style="height:36px;">
+            <span class="version-chip"><span class="dot"></span>v3.05.79</span>
+        </a>
+        <div class="links" id="nav-links">
+            <a href="index.html#whats-new">What's New</a>
+            <a href="research-lab.html" class="active">Research Lab</a>
+            <a href="agent-os.html">Agent-OS</a>
+            <a href="docs.html">Docs</a>
+            <a href="index.html#compare">Compare</a>
+            <a href="index.html#faq">FAQ</a>
+        </div>
+        <div class="nav-right">
+            <span class="lang-switcher" aria-label="Language">
+                <a href="https://github.com/SafeRL-Lab/cheetahclaws" target="_blank" rel="noopener" title="English">EN</a>
+                <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/i18n/README.CN.MD" target="_blank" rel="noopener" title="中文">中</a>
+            </span>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+                <span class="icon-moon">&#9789;</span>
+                <span class="icon-sun">&#9728;</span>
+            </button>
+            <a class="cta-btn" href="https://github.com/SafeRL-Lab/cheetahclaws">Star on GitHub</a>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
+        </div>
+    </div>
+</nav>
+
+<main id="main">
+
+<div class="doc-hero">
+    <span class="eyebrow">Research Lab · /lab</span>
+    <h1>Autonomous <span class="gradient">Multi-Agent</span> Paper Writing</h1>
+    <p class="lede">
+        Give it a topic. Nine specialised agents drive it through nine stages — questioning, literature survey, outline, code drafting, sandboxed Python experiments, analysis, drafting, reviewer iteration, citation verification, finalisation — until convergence or budget exhaustion.
+    </p>
+    <div class="actions">
+        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/research-lab.md" target="_blank" rel="noopener">Read the Full Guide</a>
+        <a class="btn-secondary" href="docs.html">All Docs</a>
+    </div>
+</div>
+
+<div class="doc-content">
+
+<div class="toc-card">
+    <h4>On this page</h4>
+    <ul>
+        <li><a href="#what-you-get">What you get</a></li>
+        <li><a href="#realistic">Realistic positioning</a></li>
+        <li><a href="#quick-start">Quick start</a></li>
+        <li><a href="#agents">The 9 specialised agents</a></li>
+        <li><a href="#stages">Stage graph</a></li>
+        <li><a href="#output">Output artifacts</a></li>
+        <li><a href="#web-ui">Web UI</a></li>
+    </ul>
+</div>
+
+<h2 id="what-you-get">What you get</h2>
+<p>
+    A Markdown report with verified citations, a BibTeX bundle, and — when the topic admits experiments — the engineer's runnable Python script plus generated plots and result CSVs. The entire run is reproducible from a single command and a topic string.
+</p>
+
+<h2 id="realistic">Realistic positioning</h2>
+<blockquote>
+    This is <strong>arXiv-grade preprint quality</strong>, not 顶会 / NeurIPS-grade. 2026 LLMs (across all providers) hit a ceiling on novel research that even sophisticated multi-agent debate can't push through. Use this as a co-pilot that compresses 80% of the writing work, not as an autonomous PhD substitute. Read the output before posting.
+</blockquote>
+
+<h2 id="quick-start">Quick start</h2>
+
+<h3>CLI</h3>
+<pre><code>cheetahclaws
+# in the REPL:
+/lab start "Compare logistic regression and random forest on the iris
+            dataset, report test accuracy with cross-validation"
+
+# while it runs (typically 15-60 minutes):
+/lab status                       # all runs
+/lab status lab_a3b1c8e9f012      # detail for one run
+/lab logs   lab_a3b1c8e9f012      # recent agent messages
+/lab abort  lab_a3b1c8e9f012      # cancel cooperatively</code></pre>
+
+<h3>Web UI</h3>
+<pre><code>cheetahclaws --web --port 8080
+# browser → http://127.0.0.1:8080/lab</code></pre>
+<p>The web UI gives you a launch form, a recent-runs table, live progress (stage pills + agent message stream auto-refreshing every 5&nbsp;s), and an in-page Markdown render of the final report.</p>
+
+<h2 id="agents">The 9 specialised agents</h2>
+
+<div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+    <div class="feature-card">
+        <div class="icon">&#127979;</div>
+        <h3>PI</h3>
+        <p>Principal Investigator — picks the most promising research question, signs off on the outline when 2 of 3 reviewers approve, makes final decisions.</p>
+    </div>
+    <div class="feature-card">
+        <div class="icon">&#10067;</div>
+        <h3>Questioner</h3>
+        <p>Drafts 3–5 candidate research questions that frame the topic. Diverges so the PI has real options.</p>
+    </div>
+    <div class="feature-card">
+        <div class="icon">&#128106;</div>
+        <h3>Lay Reader</h3>
+        <p>Sanity-checks the question for accessibility and external relevance, not just technical correctness.</p>
+    </div>
+    <div class="feature-card">
+        <div class="icon">&#128218;</div>
+        <h3>Surveyor</h3>
+        <p>Produces a focused literature review and gap analysis with inline citations across arXiv, Semantic Scholar, and OpenAlex.</p>
+    </div>
+    <div class="feature-card">
+        <div class="icon">&#128221;</div>
+        <h3>Designer</h3>
+        <p>Drafts the paper outline. Section structure, claims, and intended experiments before any code is written.</p>
+    </div>
+    <div class="feature-card">
+        <div class="icon">&#128104;&#8205;&#128187;</div>
+        <h3>Engineer</h3>
+        <p>Writes the Python script. Runs it in a sandboxed subprocess with stdout / stderr / exit-code capture and matplotlib figures collected.</p>
+    </div>
+    <div class="feature-card">
+        <div class="icon">&#9997;</div>
+        <h3>Drafter</h3>
+        <p>Turns the outline + experiment results into a full Markdown draft with figure references and proper citations.</p>
+    </div>
+    <div class="feature-card">
+        <div class="icon">&#128270;</div>
+        <h3>Reviewer × 3</h3>
+        <p>Three independent reviewers critique the draft. Iterates with the Drafter until 2 of 3 approve or budget runs out.</p>
+    </div>
+    <div class="feature-card">
+        <div class="icon">&#9989;</div>
+        <h3>Citation Checker</h3>
+        <p>Verifies every citation against arXiv / Semantic Scholar / CrossRef. Flags fabrications, normalizes BibTeX entries.</p>
+    </div>
+</div>
+
+<h2 id="stages">Stage graph</h2>
+<pre><code>[topic]
+   ↓
+QUESTIONING       Questioner drafts 3-5 candidate questions; PI picks; Lay Reader checks.
+   ↓
+SURVEY            Surveyor produces focused literature review + gap analysis.
+   ↓
+OUTLINE           Designer drafts; Reviewer × 3 critique; PI signs off when 2/3 pass.
+   ↓
+CODE_DRAFT        Engineer writes initial Python script.
+   ↓
+EXPERIMENT        Sandboxed subprocess execution: stdout, stderr, exit code, figures.
+   ↓
+ANALYSIS          Engineer interprets results; flags failed runs for retry.
+   ↓
+DRAFTING          Drafter composes Markdown report with figure references.
+   ↓
+REVIEW LOOP       Reviewer × 3 ⇄ Drafter until 2/3 approve or N rounds.
+   ↓
+CITATION VERIFY   Every reference checked against arXiv / Semantic Scholar / CrossRef.
+   ↓
+FINALISE          Bundle: report.md + references.bib + workspace/</code></pre>
+
+<h2 id="output">Output artifacts</h2>
+<p>When the run finishes, the report lands at <code>~/.cheetahclaws/research_papers/&lt;run_id&gt;/</code>:</p>
+<pre><code>report.md                   ← main deliverable
+references.bib              ← verified citations
+citations_verified.json     ← per-citation verification log
+workspace/
+  experiment.py             ← engineer's final script
+  stdout.txt
+  stderr.txt
+  exit_code.txt
+  figure_1.png              ← any matplotlib output
+  results.csv               ← any data files the engineer wrote</code></pre>
+
+<h2 id="web-ui">Web UI</h2>
+<p>
+    <code>cheetahclaws --web --port 8080</code> then visit <code>/lab</code>. The dashboard gives you:
+</p>
+<ul>
+    <li><strong>Launch form</strong> — topic + provider + budget</li>
+    <li><strong>Live progress</strong> — stage pills update as the pipeline advances; agent message stream auto-refreshes every 5 s</li>
+    <li><strong>Recent runs table</strong> — sortable, filterable, with run-id click-through</li>
+    <li><strong>In-page Markdown render</strong> of the final report when finished</li>
+    <li><strong>Abort button</strong> for cooperative cancellation mid-run</li>
+</ul>
+
+<h2 id="budget">Budget and convergence</h2>
+<p>
+    Every run is bounded. The PI tracks token / call / wall-clock budgets and stops the pipeline when any of three exit conditions trigger: (1) the reviewer loop converges (≥&nbsp;2/3 reviewers approve), (2) the budget is exhausted, (3) the user calls <code>/lab abort</code>. Final reports always ship the verified-citation pass — bad citations never make it through.
+</p>
+
+</div><!-- /doc-content -->
+
+<div class="cta-section">
+    <h2>Ready to Run Your First Lab?</h2>
+    <p>Install in 30 seconds, launch your first paper in 5 minutes.</p>
+    <div class="actions" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a class="btn-primary" href="index.html#whats-new">Install CheetahClaws</a>
+        <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/research-lab.md" target="_blank" rel="noopener">Full Guide on GitHub</a>
+    </div>
+</div>
+
+</main>
+
+<footer>
+    <p>
+        CheetahClaws is open source under the Apache-2.0 license.
+        Created by <a href="https://github.com/SafeRL-Lab">SAIL Lab (UC Berkeley)</a>.
+    </p>
+    <p style="margin-top:0.5rem;">
+        <a href="index.html">Home</a> &middot;
+        <a href="research-lab.html">Research Lab</a> &middot;
+        <a href="agent-os.html">Agent-OS</a> &middot;
+        <a href="docs.html">Docs</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws">GitHub</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws/issues">Issues</a>
+    </p>
+    <p style="margin-top:1rem;">
+        Contact: <a href="mailto:shangding.gu@berkeley.edu">shangding.gu@berkeley.edu</a>
+    </p>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

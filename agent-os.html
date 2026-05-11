@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent-OS Kernel (cc_kernel/) — Single-Node Agent Operating System · CheetahClaws</title>
+    <meta name="description" content="Agent-OS kernel under cc_kernel/: process table, capability model, per-agent quota ledger, scheduler, mailbox / registry, AgentFS, observability, frozen v1.0 JSON-RPC contract — backed by SQLite WAL. 27 RFCs shipped, 1771 tests, zero regressions.">
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <link rel="canonical" href="https://cheetahclaws.github.io/agent-os.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="CheetahClaws Agent-OS Kernel — cc_kernel/">
+    <meta property="og:description" content="Single-node agent operating system: capability model, quota ledger, scheduler, mailbox, AgentFS, observability. 27 RFCs shipped, 1771 tests passing. Strictly additive — legacy REPL path unchanged.">
+    <meta property="og:url" content="https://cheetahclaws.github.io/agent-os.html">
+    <meta property="og:image" content="https://cheetahclaws.github.io/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav>
+    <div class="inner">
+        <a href="index.html" class="logo" aria-label="CheetahClaws home">
+            <img src="logo.png" alt="CheetahClaws" style="height:36px;">
+            <span class="version-chip"><span class="dot"></span>v3.05.79</span>
+        </a>
+        <div class="links" id="nav-links">
+            <a href="index.html#whats-new">What's New</a>
+            <a href="research-lab.html">Research Lab</a>
+            <a href="agent-os.html" class="active">Agent-OS</a>
+            <a href="docs.html">Docs</a>
+            <a href="index.html#compare">Compare</a>
+            <a href="index.html#faq">FAQ</a>
+        </div>
+        <div class="nav-right">
+            <span class="lang-switcher" aria-label="Language">
+                <a href="https://github.com/SafeRL-Lab/cheetahclaws" target="_blank" rel="noopener" title="English">EN</a>
+                <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/i18n/README.CN.MD" target="_blank" rel="noopener" title="中文">中</a>
+            </span>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+                <span class="icon-moon">&#9789;</span>
+                <span class="icon-sun">&#9728;</span>
+            </button>
+            <a class="cta-btn" href="https://github.com/SafeRL-Lab/cheetahclaws">Star on GitHub</a>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
+        </div>
+    </div>
+</nav>
+
+<main id="main">
+
+<div class="doc-hero">
+    <span class="eyebrow">Agent-OS · cc_kernel/ · v1.0</span>
+    <h1>A <span class="gradient">Single-Node Agent</span> Operating System</h1>
+    <p class="lede">
+        The substrate that turns the legacy REPL/bridge into a long-running, multi-agent kernel: process table, capability model, quota ledger, scheduler, mailbox / registry, virtual filesystem, observability, and a frozen JSON-RPC contract — backed by a single SQLite WAL database.
+    </p>
+    <div class="actions">
+        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/agent-os.md" target="_blank" rel="noopener">Read the Design Notes</a>
+        <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/tree/main/docs/RFC" target="_blank" rel="noopener">Browse 27 RFCs</a>
+    </div>
+</div>
+
+<div class="doc-content">
+
+<div class="toc-card">
+    <h4>On this page</h4>
+    <ul>
+        <li><a href="#why">Why this exists</a></li>
+        <li><a href="#layout">Layout</a></li>
+        <li><a href="#activation">Activation</a></li>
+        <li><a href="#cli">Kernel CLI</a></li>
+        <li><a href="#rfcs">RFC roadmap (27 shipped)</a></li>
+        <li><a href="#tools">Tool inventory</a></li>
+        <li><a href="#streaming">Streaming</a></li>
+        <li><a href="#bc">Backwards compatibility</a></li>
+    </ul>
+</div>
+
+<h2 id="why">Why this exists</h2>
+<p>
+    Before <code>cc_kernel/</code>, CheetahClaws was an <em>agent runtime / middleware</em>: single-user REPL → tool dispatch → LLM. There was no place to:
+</p>
+<ul>
+    <li>Run multiple agents concurrently with isolation between them</li>
+    <li>Cap CPU / memory / file-size / network on a per-agent basis with observable rollups</li>
+    <li>Route tool calls through capability checks</li>
+    <li>Wire one agent's output into another's mailbox</li>
+    <li>Persist agent state across restarts via a versioned schema</li>
+    <li>Surface live metrics over Prometheus</li>
+</ul>
+<p>The kernel layer adds all of that as <strong>opt-in surface</strong>, while keeping the legacy single-process REPL path byte-for-byte intact.</p>
+
+<h2 id="layout">Layout</h2>
+<pre><code>cc_kernel/
+  api.py             # `Kernel` facade — open(...), make_supervisor(), …
+  store.py           # SQLite WAL store, single shared connection
+  schema.py          # Forward-only migrations v1 → v7
+  capability.py      # tool_grants / fs_grants / net_grants / model_grants
+  ledger.py          # Per-agent ResourceLedger + first_breach signal
+  scheduler.py       # Priority queue + admission filter
+  mailbox.py         # Direct + topic pub-sub (RFC 0009)
+  registry.py        # name → pid (RFC 0010)
+  agent_fs.py        # VFS unifying memory/checkpoint/skill/task
+  sandbox.py         # RLIMIT + bubblewrap + wall-clock killer
+  contract.py        # Frozen v1.0 method registry, drift CI guard
+  cli.py             # `cheetahclaws kernel &lt;action&gt;` subcommand
+  tools/             # Built-in tools (Echo, Read, Write, Glob, List,
+                     # Diff, AST) and opt-in (Exec, Fetch, Git)
+  runner/
+    supervisor.py    # Subprocess agents w/ IPC + chunk streaming
+    ipc.py           # Line-delimited JSON channel
+    llm/             # LLM runner (Anthropic + scripted mock providers)
+    bridge_mirror/   # bridges ↔ kernel.mbox without touching bridges/</code></pre>
+
+<h2 id="activation">Activation</h2>
+<p>Operators turn the kernel on via:</p>
+<pre><code>cheetahclaws serve --enable-kernel</code></pre>
+<p>Without <code>--enable-kernel</code>, the daemon serves the same surface as before and <code>cc_kernel/</code> code stays dormant.</p>
+
+<h2 id="cli">Kernel CLI</h2>
+<pre><code>cheetahclaws kernel summary             # uptime, agents, queue rollup
+cheetahclaws kernel info                # version, schema, API surface
+cheetahclaws kernel agents [--state S]
+cheetahclaws kernel proc &lt;pid&gt;          # combined per-agent view
+cheetahclaws kernel events [--pid P]
+cheetahclaws kernel queue [--state S]
+cheetahclaws kernel registry [--prefix P] [--tag T]
+cheetahclaws kernel methods [--tier T]  # documented kernel.* RPCs
+cheetahclaws kernel prometheus          # Prometheus exposition text</code></pre>
+
+<h2 id="rfcs">RFC roadmap — 27 shipped, 2 parked</h2>
+
+<table>
+    <thead><tr><th>RFC</th><th>Theme</th></tr></thead>
+    <tbody>
+        <tr><td>0001</td><td>Daemon design note (IPC, auth, originator)</td></tr>
+        <tr><td>0002</td><td>Foundation roadmap (F-1..F-9)</td></tr>
+        <tr><td>0003</td><td>AgentProcess + EventLog</td></tr>
+        <tr><td>0005</td><td>Capability model</td></tr>
+        <tr><td>0006</td><td>Per-agent quota ledger</td></tr>
+        <tr><td>0007</td><td>Priority scheduler + admission filter</td></tr>
+        <tr><td>0008</td><td>RLIMIT + bubblewrap sandbox</td></tr>
+        <tr><td>0009</td><td>Mailbox + pub-sub IPC</td></tr>
+        <tr><td>0010</td><td>Agent registry / service discovery</td></tr>
+        <tr><td>0011</td><td>AgentFS — unified VFS</td></tr>
+        <tr><td>0012</td><td>Observability + chaos suite</td></tr>
+        <tr><td>0013</td><td>API stability + deprecation policy</td></tr>
+        <tr><td>0016</td><td>Subprocess agent runner</td></tr>
+        <tr><td>0017</td><td>WorkerLoop (scheduler ↔ supervisor glue)</td></tr>
+        <tr><td>0018</td><td>Bridge ↔ kernel.mbox glue</td></tr>
+        <tr><td>0019</td><td>LLM runner MVP</td></tr>
+        <tr><td>0020</td><td>Multi-turn dialogue orchestrator</td></tr>
+        <tr><td>0021</td><td>Tool dispatch + permission routing</td></tr>
+        <tr><td>0022</td><td>LLM tool calling integration</td></tr>
+        <tr><td>0023</td><td>Exec tool (argv-only, RLIMITed)</td></tr>
+        <tr><td>0024</td><td>Glob + List built-in tools</td></tr>
+        <tr><td>0025</td><td>Fetch tool (SSRF / DNS-rebind defended)</td></tr>
+        <tr><td>0026</td><td>IPC streaming chunks</td></tr>
+        <tr><td>0027</td><td>LLM streaming (provider opt-in)</td></tr>
+        <tr><td>0028</td><td>Exec stdout / stderr line streaming</td></tr>
+        <tr><td>0029</td><td>Fetch terminal-hop body streaming</td></tr>
+        <tr><td>0030</td><td>Diff tool (path + text mode)</td></tr>
+        <tr><td>0031</td><td>AST tool (Python source inspector)</td></tr>
+        <tr><td>0032</td><td>Git tool (read-only, op+flag allowlist)</td></tr>
+        <tr><td>0014</td><td>Multi-tenant — <strong>parked</strong></td></tr>
+        <tr><td>0015</td><td>Cluster — <strong>parked</strong></td></tr>
+    </tbody>
+</table>
+
+<p>Phasing: <strong>Phase 1</strong> fault domain (0003 + 0008) → <strong>Phase 2</strong> quota + capability (0005 + 0006) → <strong>Phase 3</strong> scheduler + IPC (0007 + 0009 + 0010) → <strong>Phase 4</strong> AgentFS (0011) → <strong>Phase 5</strong> ops (0012 + 0013) → tools + streaming (0019-0032).</p>
+
+<h2 id="tools">Tool inventory</h2>
+
+<h3>Auto-registered</h3>
+<table>
+    <thead><tr><th>Tool</th><th>Purpose</th><th>FS grant</th></tr></thead>
+    <tbody>
+        <tr><td><code>Echo</code></td><td>Smoke-test the dispatch path</td><td>—</td></tr>
+        <tr><td><code>Read</code></td><td>Read a file, 4 MB cap</td><td><code>r</code></td></tr>
+        <tr><td><code>Write</code></td><td>Write a file, 4 MB cap</td><td><code>rw</code></td></tr>
+        <tr><td><code>Glob</code></td><td>Pattern match (≤ 10k results)</td><td><code>r</code></td></tr>
+        <tr><td><code>List</code></td><td>Directory listing</td><td><code>r</code></td></tr>
+        <tr><td><code>Diff</code></td><td>Unified diff (path or text mode)</td><td><code>r</code></td></tr>
+        <tr><td><code>AST</code></td><td>Python AST inspector</td><td><code>r</code></td></tr>
+    </tbody>
+</table>
+
+<h3>Opt-in (operator must call <code>register_&lt;tool&gt;(registry)</code>)</h3>
+<table>
+    <thead><tr><th>Tool</th><th>Purpose</th><th>Sandbox</th></tr></thead>
+    <tbody>
+        <tr><td><code>Exec</code></td><td>argv-only subprocess, no shell</td><td>RLIMIT + wall-clock + scrubbed env</td></tr>
+        <tr><td><code>Fetch</code></td><td>Bounded HTTP, SSRF / DNS-rebind defended</td><td>per-hop cap check + IP block</td></tr>
+        <tr><td><code>Git</code></td><td>Read-only git inspector</td><td>RLIMIT + op+flag allowlist + gitconfig disabled</td></tr>
+    </tbody>
+</table>
+<p>The opt-in tools are <strong>not</strong> in <code>register_builtin_tools</code> because their threat surface is materially larger. Operators must explicitly opt in.</p>
+
+<h2 id="streaming">Streaming</h2>
+<p>Three layers stream incrementally to a single <code>on_chunk(payload)</code> sink:</p>
+<ul>
+    <li><strong>LLM</strong> — provider-side <code>stream(req, on_delta)</code> emits per-token text deltas (RFC 0027).</li>
+    <li><strong>Exec</strong> — Popen + queue-serialized reader threads emit per-line stdout / stderr (RFC 0028).</li>
+    <li><strong>Fetch</strong> — terminal-hop body chunks per 8 KB read (RFC 0029).</li>
+</ul>
+<p>Plumbed end-to-end through:</p>
+<pre><code>sup.wait(pid, on_chunk=lambda c: my_ui.append(c))</code></pre>
+<p>…where each chunk is a dict <code>{op:"chunk", kind, content, metadata:{...}}</code>. <code>RunnerExitInfo.chunks</code> accumulates the full sequence post-exit.</p>
+
+<h2 id="bc">Backwards compatibility</h2>
+<ul>
+    <li>All kernel code is gated behind <code>--enable-kernel</code>. Default CheetahClaws CLI / REPL / bridges / web UI unchanged.</li>
+    <li>Kernel SQLite schema is forward-only (versioned migrations <code>v1 → v7</code>). Old <code>kernel.db</code> files upgrade in place.</li>
+    <li>The v1.0 RPC contract (58 stable methods) has CI drift guard via <code>cc_kernel/contract.py</code> — accidental method removal fails the build.</li>
+    <li><strong>Tests: 1771 passing, zero regressions on the legacy code paths.</strong></li>
+</ul>
+
+<h2 id="next">Where to next</h2>
+<p>The kernel is at v1.0 production-grade for <strong>single-node</strong> use. Two RFCs remain explicitly parked:</p>
+<ul>
+    <li><strong>RFC 0014 multi-tenant</strong> — only worth doing if cheetahclaws is deployed as team SaaS / shared infrastructure.</li>
+    <li><strong>RFC 0015 cluster</strong> — only worth doing once a single host saturates real workload (distributed scheduler + cross-host mailbox + partition tolerance).</li>
+</ul>
+<p>Higher-ROI follow-ups: tag a v1.x release + CHANGELOG, integration performance tests under real LLM workload, operator documentation for <code>--enable-kernel</code> deployment.</p>
+
+</div><!-- /doc-content -->
+
+<div class="cta-section">
+    <h2>Try the Kernel</h2>
+    <p>One flag turns it on. Browse the RFCs for full design notes.</p>
+    <div class="actions" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a class="btn-primary" href="index.html#whats-new">Install CheetahClaws</a>
+        <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/tree/main/docs/RFC" target="_blank" rel="noopener">Browse RFCs</a>
+    </div>
+</div>
+
+</main>
+
+<footer>
+    <p>
+        CheetahClaws is open source under the Apache-2.0 license.
+        Created by <a href="https://github.com/SafeRL-Lab">SAIL Lab (UC Berkeley)</a>.
+    </p>
+    <p style="margin-top:0.5rem;">
+        <a href="index.html">Home</a> &middot;
+        <a href="research-lab.html">Research Lab</a> &middot;
+        <a href="agent-os.html">Agent-OS</a> &middot;
+        <a href="docs.html">Docs</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws">GitHub</a> &middot;
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws/issues">Issues</a>
+    </p>
+    <p style="margin-top:1rem;">
+        Contact: <a href="mailto:shangding.gu@berkeley.edu">shangding.gu@berkeley.edu</a>
+    </p>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

@@ -3,675 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CheetahClaws — Fast Personal AI Assistant for Any Model</title>
-    <meta name="description" content="CheetahClaws: A fast, easy-to-use, Python-native personal AI assistant supporting Claude, GPT, Gemini, Ollama, and 200+ models. Open source, runs locally.">
+    <title>CheetahClaws — The Fast Personal AI Assistant for Any Model · v3.05.79</title>
+    <meta name="description" content="CheetahClaws (Nano Claude Code): Python-native AI assistant for any model — Claude, GPT, Gemini, DeepSeek V4, Qwen, Ollama. Agent-OS kernel, Research Lab, Daemon mode, Telegram/WeChat/Slack remote control, 33+ built-in tools. Runs 24/7, open source (Apache-2.0).">
+    <meta name="keywords" content="AI assistant, Claude Code alternative, open source AI agent, Python AI agent, multi-model AI, Ollama agent, autonomous research agent, MCP, agent OS, DeepSeek, Qwen, local LLM, Telegram bot, WeChat bot">
+    <meta name="author" content="SAIL Lab (UC Berkeley)">
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <link rel="canonical" href="https://cheetahclaws.github.io/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CheetahClaws — Fast Personal AI Assistant for Any Model">
+    <meta property="og:description" content="Python-native AI assistant supporting any model. Agent-OS kernel, autonomous Research Lab, 24/7 daemon mode, Telegram/WeChat/Slack remote control, 1900+ tests. Apache-2.0.">
+    <meta property="og:url" content="https://cheetahclaws.github.io/">
+    <meta property="og:site_name" content="CheetahClaws">
+    <meta property="og:image" content="https://cheetahclaws.github.io/logo.png">
+    <meta property="og:image:alt" content="CheetahClaws logo">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CheetahClaws — Fast Personal AI Assistant for Any Model">
+    <meta name="twitter:description" content="Python-native AI assistant for any model. Agent-OS, Research Lab, daemon mode, Telegram/WeChat/Slack bridges. Apache-2.0.">
+    <meta name="twitter:image" content="https://cheetahclaws.github.io/logo.png">
+
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0a0a0a;
-            --bg-card: #111111;
-            --bg-code: #1a1a2e;
-            --bg-nav: rgba(10,10,10,0.85);
-            --text: #e4e4e7;
-            --text-dim: #a1a1aa;
-            --accent: #22d3ee;
-            --accent2: #a78bfa;
-            --accent3: #34d399;
-            --border: #27272a;
-            --shadow-strong: 0 20px 60px rgba(0,0,0,0.5);
-            --shadow-soft: 0 8px 30px rgba(34,211,238,0.3);
-            --check: #34d399;
-            --cross: #f87171;
-            --gradient: linear-gradient(135deg, #22d3ee 0%, #a78bfa 50%, #f472b6 100%);
-        }
 
-        [data-theme="light"] {
-            --bg: #ffffff;
-            --bg-card: #f9fafb;
-            --bg-code: #f3f4f6;
-            --bg-nav: rgba(255,255,255,0.85);
-            --text: #18181b;
-            --text-dim: #52525b;
-            --accent: #0891b2;
-            --accent2: #7c3aed;
-            --accent3: #059669;
-            --border: #e4e4e7;
-            --shadow-strong: 0 20px 60px rgba(0,0,0,0.08);
-            --shadow-soft: 0 8px 30px rgba(8,145,178,0.18);
-            --check: #059669;
-            --cross: #dc2626;
-            --gradient: linear-gradient(135deg, #0891b2 0%, #7c3aed 50%, #db2777 100%);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-            transition: background 0.25s ease, color 0.25s ease;
-        }
-
-        /* ── Nav ─────────────────────────────────── */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
-            background: var(--bg-nav);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 0 2rem;
-            transition: background 0.25s ease, border-color 0.25s ease;
-        }
-        nav .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .theme-toggle {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            transition: border-color 0.2s, transform 0.2s, background 0.25s, color 0.25s;
-        }
-        .theme-toggle:hover {
-            border-color: var(--accent);
-            transform: rotate(15deg);
-        }
-        .theme-toggle .icon-sun { display: none; }
-        [data-theme="light"] .theme-toggle .icon-sun { display: inline; }
-        [data-theme="light"] .theme-toggle .icon-moon { display: none; }
-        nav .inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 64px;
-        }
-        nav .logo {
-            font-weight: 800;
-            font-size: 1.2rem;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        nav .links { display: flex; gap: 2rem; }
-        nav .links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        nav .links a:hover { color: var(--accent); }
-        nav .cta-btn {
-            background: var(--accent);
-            color: #000;
-            padding: 0.5rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-        nav .cta-btn:hover { opacity: 0.85; }
-
-        /* ── Hero ────────────────────────────────── */
-        .hero {
-            padding: 10rem 2rem 6rem;
-            text-align: center;
-            position: relative;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 600px;
-            background: radial-gradient(ellipse, rgba(34,211,238,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero .badge {
-            display: inline-block;
-            background: rgba(34,211,238,0.1);
-            border: 1px solid rgba(34,211,238,0.3);
-            color: var(--accent);
-            padding: 0.4rem 1rem;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .hero h1 .gradient {
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-        }
-        .hero .actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .btn-primary {
-            background: var(--accent);
-            color: #000;
-            padding: 0.8rem 2rem;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1rem;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-soft);
-        }
-        .btn-secondary {
-            background: var(--bg-card);
-            color: var(--text);
-            padding: 0.8rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-            text-decoration: none;
-            border: 1px solid var(--border);
-            transition: border-color 0.2s;
-        }
-        .btn-secondary:hover { border-color: var(--accent); }
-
-        /* ── Install bar ─────────────────────────── */
-        .install-bar {
-            max-width: 600px;
-            margin: 2.5rem auto 0;
-            background: var(--bg-code);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-        .install-bar code {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--accent3);
-        }
-        .install-bar button {
-            background: none;
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-        }
-        .install-bar button:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* ── Demo ────────────────────────────────── */
-        .demo {
-            max-width: 900px;
-            margin: 4rem auto;
-            padding: 0 2rem;
-        }
-        .demo img, .demo video {
-            width: 100%;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-strong);
-        }
-
-        /* ── Section ─────────────────────────────── */
-        section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
-        }
-        section h2 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        section .subtitle {
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto 3rem;
-        }
-
-        /* ── Feature grid ────────────────────────── */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: border-color 0.3s, transform 0.3s;
-        }
-        .feature-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-        }
-        .feature-card .icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        .feature-card h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        .feature-card p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-
-        /* ── Providers ───────────────────────────── */
-        .providers {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-        .provider-chip {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 0.5rem 1.2rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            transition: border-color 0.2s;
-        }
-        .provider-chip:hover { border-color: var(--accent2); color: var(--text); }
-
-        /* ── Code example ────────────────────────── */
-        .code-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-        .code-block {
-            background: var(--bg-code);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            overflow-x: auto;
-        }
-        .code-block .label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.8rem;
-        }
-        .code-block pre {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            line-height: 1.7;
-            color: var(--text);
-        }
-        .code-block .comment { color: #6b7280; }
-        .code-block .cmd { color: var(--accent3); }
-        .code-block .output { color: var(--text-dim); }
-        .code-block .highlight { color: var(--accent); }
-
-        .code-desc {
-            padding-top: 1rem;
-        }
-        .code-desc h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        .code-desc p {
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-        }
-        .code-desc ul {
-            list-style: none;
-            padding: 0;
-        }
-        .code-desc ul li {
-            padding: 0.5rem 0;
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-        .code-desc ul li::before {
-            content: '>';
-            color: var(--accent);
-            font-weight: 700;
-            margin-right: 0.5rem;
-        }
-
-        /* ── Stats ───────────────────────────────── */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            text-align: center;
-            padding: 4rem 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .stat-num {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            margin-top: 0.3rem;
-        }
-
-        /* ── CTA ─────────────────────────────────── */
-        .cta-section {
-            text-align: center;
-            padding: 8rem 2rem;
-            position: relative;
-        }
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 400px;
-            background: radial-gradient(ellipse, rgba(167,139,250,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .cta-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .cta-section p {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-
-        /* ── Footer ──────────────────────────────── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 3rem 2rem;
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
-        footer a { color: var(--accent); text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-
-        /* ── Responsive ──────────────────────────── */
-        /* ── Lightbox overlay ─────────────────────── */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 999;
-            cursor: zoom-out;
-            justify-content: center;
-            align-items: center;
-        }
-        .lightbox.active { display: flex; }
-        .lightbox img {
-            max-width: 92%;
-            max-height: 92%;
-            border-radius: 12px;
-            box-shadow: 0 0 60px rgba(34,211,238,0.2);
-        }
-        .lightbox .close-btn {
-            position: absolute;
-            top: 1.5rem; right: 2rem;
-            color: #fff;
-            font-size: 2rem;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-        .lightbox .close-btn:hover { opacity: 1; }
-
-        /* Demo images zoomable */
-        .feature-card img, .demo img {
-            cursor: zoom-in;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .feature-card img:hover, .demo img:hover {
-            transform: scale(1.03);
-            box-shadow: 0 8px 30px rgba(34,211,238,0.15);
-        }
-
-        /* ── Comparison ──────────────────────────── */
-        .compare-wrap {
-            overflow-x: auto;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            background: var(--bg-card);
-        }
-        table.compare {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.92rem;
-            min-width: 720px;
-        }
-        table.compare th,
-        table.compare td {
-            padding: 1rem 1.25rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-            vertical-align: top;
-        }
-        table.compare thead th {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            background: var(--bg-code);
-        }
-        table.compare thead th.highlight-col {
-            color: var(--accent);
-        }
-        table.compare tbody th {
-            font-weight: 600;
-            color: var(--text);
-            width: 22%;
-        }
-        table.compare td {
-            color: var(--text-dim);
-        }
-        table.compare td.highlight-col {
-            color: var(--text);
-            background: rgba(34,211,238,0.04);
-        }
-        [data-theme="light"] table.compare td.highlight-col {
-            background: rgba(8,145,178,0.06);
-        }
-        table.compare tr:last-child th,
-        table.compare tr:last-child td { border-bottom: none; }
-        .check { color: var(--check); font-weight: 700; }
-        .cross { color: var(--cross); font-weight: 700; }
-
-        .compare-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 2.5rem;
-        }
-        .compare-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.75rem;
-        }
-        .compare-card.featured {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent);
-        }
-        .compare-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.4rem;
-        }
-        .compare-card .tag {
-            display: inline-block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--accent);
-            margin-bottom: 0.8rem;
-        }
-        .compare-card p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        .compare-card ul { list-style: none; padding: 0; }
-        .compare-card ul li {
-            padding: 0.35rem 0;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-        }
-        .compare-card ul li::before {
-            content: '✓';
-            color: var(--check);
-            font-weight: 700;
-            margin-right: 0.5rem;
-        }
-        .compare-card ul li.no::before {
-            content: '✗';
-            color: var(--cross);
-        }
-
-        @media (max-width: 768px) {
-            .code-section { grid-template-columns: 1fr; }
-            .stats { grid-template-columns: repeat(2, 1fr); }
-            nav .links { display: none; }
-            .install-bar { flex-direction: column; text-align: center; }
-            .compare-cards { grid-template-columns: 1fr; }
-        }
-    </style>
+    <!-- Structured Data: SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "CheetahClaws",
+      "alternateName": "Nano Claude Code",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS, Linux, Windows",
+      "softwareVersion": "3.05.79",
+      "datePublished": "2026-05-10",
+      "description": "Python-native AI assistant supporting any model — Claude, GPT, Gemini, DeepSeek, Qwen, Ollama. Agent-OS kernel, Research Lab, daemon mode, remote control bridges, 33+ built-in tools.",
+      "url": "https://cheetahclaws.github.io/",
+      "license": "https://www.apache.org/licenses/LICENSE-2.0",
+      "codeRepository": "https://github.com/SafeRL-Lab/cheetahclaws",
+      "programmingLanguage": "Python",
+      "author": {
+        "@type": "Organization",
+        "name": "SAIL Lab (UC Berkeley)",
+        "url": "https://github.com/SafeRL-Lab"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="assets/site.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.7.1/dist/bundle/asciinema-player.css">
 </head>
 <body>
+
+<a href="#main" class="skip-link">Skip to content</a>
 
 <!-- Nav -->
 <nav>
     <div class="inner">
-        <a href="#" class="logo"><img src="logo.png" alt="CheetahClaws" style="height:36px;"></a>
-        <div class="links">
-            <a href="#features">Features</a>
-            <a href="#models">Models</a>
-            <a href="#examples">Examples</a>
-            <a href="#tools">Tools</a>
+        <a href="#" class="logo" aria-label="CheetahClaws home">
+            <img src="logo.png" alt="CheetahClaws" style="height:36px;">
+            <span class="version-chip"><span class="dot"></span>v3.05.79</span>
+        </a>
+        <div class="links" id="nav-links">
+            <a href="#whats-new">What's New</a>
+            <a href="research-lab.html">Research Lab</a>
+            <a href="agent-os.html">Agent-OS</a>
+            <a href="docs.html">Docs</a>
             <a href="#compare">Compare</a>
-            <a href="https://github.com/SafeRL-Lab/cheetahclaws" target="_blank">GitHub</a>
+            <a href="#faq">FAQ</a>
+            <a href="https://github.com/SafeRL-Lab/cheetahclaws" target="_blank" rel="noopener">GitHub</a>
         </div>
         <div class="nav-right">
+            <span class="lang-switcher" aria-label="Language">
+                <a href="https://github.com/SafeRL-Lab/cheetahclaws" target="_blank" rel="noopener" title="English">EN</a>
+                <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/i18n/README.CN.MD" target="_blank" rel="noopener" title="中文">中</a>
+            </span>
             <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
                 <span class="icon-moon">&#9789;</span>
                 <span class="icon-sun">&#9728;</span>
             </button>
             <a class="cta-btn" href="https://github.com/SafeRL-Lab/cheetahclaws">Star on GitHub</a>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
         </div>
     </div>
 </nav>
 
+<main id="main">
+
 <!-- Hero -->
 <div class="hero">
-    <div class="badge">Open Source &middot; Python &middot; Any Model</div>
+    <div class="badge">Open Source &middot; Python &middot; Any Model &middot; Runs 24/7</div>
     <h1>
         The <span class="gradient">Fast Personal AI Assistant</span> That Works With Any Model
     </h1>
     <p>
-        Claude, GPT, Gemini, DeepSeek, Ollama, or your own endpoint.
-        One tool, every model, fully hackable in Python.
+        Claude, GPT, Gemini, DeepSeek V4, Qwen, Ollama, or your own endpoint.
+        One tool, every model, fully hackable in Python — with an Agent-OS kernel,
+        autonomous Research Lab, and 24/7 daemon mode.
     </p>
+    <div class="hero-badges" aria-label="Project badges">
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws/stargazers" target="_blank" rel="noopener"><img src="https://img.shields.io/github/stars/SafeRL-Lab/cheetahclaws?style=for-the-badge&logo=github&color=22d3ee" alt="GitHub stars"></a>
+        <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/LICENSE" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/license-Apache_2.0-a78bfa?style=for-the-badge" alt="Apache 2.0"></a>
+        <img src="https://img.shields.io/badge/python-3.10%E2%80%933.13-34d399?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10–3.13">
+        <img src="https://img.shields.io/badge/tests-1900%2B%20passing-34d399?style=for-the-badge" alt="1900+ tests passing">
+        <img src="https://img.shields.io/badge/version-v3.05.79-f472b6?style=for-the-badge" alt="v3.05.79">
+    </div>
     <div class="actions">
-        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws">Get Started</a>
+        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws#installation">Get Started</a>
         <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/recipes.md">View Recipes</a>
+    </div>
+    <div class="install-tabs" role="tablist">
+        <button class="install-tab active" data-cmd="curl" role="tab" aria-selected="true">curl</button>
+        <button class="install-tab" data-cmd="pip" role="tab" aria-selected="false">pip</button>
+        <button class="install-tab" data-cmd="uv" role="tab" aria-selected="false">uv</button>
+        <button class="install-tab" data-cmd="docker" role="tab" aria-selected="false">Docker</button>
     </div>
     <div class="install-bar">
         <code id="install-cmd">curl -fsSL https://raw.githubusercontent.com/SafeRL-Lab/cheetahclaws/main/scripts/install.sh | bash</code>
-        <button onclick="navigator.clipboard.writeText(document.getElementById('install-cmd').innerText); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
+        <button id="install-copy" type="button">Copy</button>
     </div>
 </div>
 
-<!-- Demo GIF -->
-<div class="demo">
-    <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/demo.gif" alt="CheetahClaws demo — task execution in terminal">
+<!-- What's New banner -->
+<div class="whats-new" id="whats-new-banner" role="region" aria-label="Latest release">
+    <span class="tag">NEW · v3.05.79</span>
+    <div class="text">
+        <strong>Agent-OS kernel v1.0</strong> · <strong>Research Lab</strong> (autonomous multi-day research) · <strong>Daemon mode</strong> (<code>cheetahclaws serve</code>) · <strong>Docker / home-server</strong> · <strong>MCP HTTP/SSE + OAuth 2.0</strong> · <strong>20-source research</strong> incl. 知乎 · B站 · 微博 · 小红书 · <strong>Web Chat UI</strong> with folders &amp; multi-user auth.
+    </div>
+    <a href="#whats-new">See what shipped &rarr;</a>
+</div>
+
+<!-- Interactive terminal demo (asciinema cast) -->
+<div class="cast-wrap">
+    <div class="player-shell">
+        <div id="ascii-demo" aria-label="Interactive terminal recording of a CheetahClaws session"></div>
+    </div>
+    <p class="caption">Interactive recording — pause, scrub, copy text. Loops automatically.</p>
 </div>
 
 <!-- Stats -->
 <section>
     <div class="stats">
         <div>
-            <div class="stat-num">33+</div>
+            <div class="stat-num" data-count="33" data-suffix="+">33+</div>
             <div class="stat-label">Built-in Tools</div>
         </div>
         <div>
-            <div class="stat-num">10+</div>
+            <div class="stat-num" data-count="10" data-suffix="+">10+</div>
             <div class="stat-label">Model Providers</div>
         </div>
         <div>
-            <div class="stat-num">40K</div>
+            <div class="stat-num" data-count="110" data-suffix="K+">110K+</div>
             <div class="stat-label">Lines of Python</div>
         </div>
         <div>
-            <div class="stat-num">341+</div>
+            <div class="stat-num" data-count="1900" data-suffix="+" data-format="comma">1,900+</div>
             <div class="stat-label">Tests Passing</div>
+        </div>
+    </div>
+</section>
+
+<!-- What's New in v3.05.79 -->
+<section id="whats-new">
+    <h2>What&rsquo;s New in v3.05.79</h2>
+    <p class="subtitle">Active development — major upgrades shipped in the last 30 days. <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/news.md" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Full changelog &rarr;</a></p>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="icon">&#129504;</div>
+            <h3>Agent-OS Kernel v1.0</h3>
+            <p>The <code>cc_kernel/</code> layer: process table, capability model, quota ledger, scheduler, mailbox, AgentFS. <strong>27 RFCs shipped</strong> &middot; 1,771 tests &middot; zero regressions on the legacy REPL path. <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/agent-os.md" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Design notes &rarr;</a></p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128300;</div>
+            <h3>Research Lab</h3>
+            <p>Autonomous multi-day research with <strong>9 specialised agents</strong> (PI, Engineer, 3&times; Reviewers, …), sandboxed Python experiments, citation verification (arXiv / Semantic Scholar / CrossRef), and reviewer-author iteration. Targets arXiv-grade preprint quality.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#127759;</div>
+            <h3>20-Source Research Pipeline</h3>
+            <p>Parallel fan-out across arXiv, Semantic Scholar, OpenAlex, HuggingFace Papers, HackerNews, GitHub, Reddit, SEC EDGAR, Twitter/X, plus <strong>知乎 · B站 · 微博 · 小红书</strong>. Cross-platform attention heat tables, entity extraction, weekly trend tracking.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#9881;</div>
+            <h3>Daemon Mode &mdash; 24/7</h3>
+            <p><code>cheetahclaws serve</code> runs the agent as a long-lived service. Manage with <code>daemon status / stop / logs / rotate-token</code>. Survives reboots, runs autonomously on your home server.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128034;</div>
+            <h3>Docker &amp; Home-Server</h3>
+            <p>One-command deploy via <code>docker-compose up</code>. Production-hardened web UI: SQLAlchemy persistence, bcrypt + JWT multi-user auth, ops endpoints, full pytest suite.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128279;</div>
+            <h3>MCP HTTP/SSE + OAuth 2.0</h3>
+            <p>Model Context Protocol over HTTP / Server-Sent Events with <strong>OAuth 2.0 PKCE</strong> for enterprise SSO. <code>ANTHROPIC_ENDPOINT</code> corporate-proxy override, <code>.env</code> loader, polished <code>AskUserQuestion</code> UI.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128172;</div>
+            <h3>Web Chat UI &mdash; ChatGPT-Style</h3>
+            <p>Session folders, drag-and-drop organization, active-folder context, batch select &amp; export, resizable sidebar. Slash commands work everywhere (Docker / <code>--web</code> / Telegram / WeChat / Slack).</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128640;</div>
+            <h3>DeepSeek V4 &amp; New Providers</h3>
+            <p>First-class support for <strong>DeepSeek V4</strong>, multi-model prompt adaptation, end-to-end <strong>prompt-cache token tracking</strong> across all providers with full checkpoint round-trip.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128229;</div>
+            <h3>Cross-Channel File Round-Trip</h3>
+            <p>Telegram / WeChat / Slack bridges now support full file upload &amp; download. Pickable permission prompts surface natively in chat. Stagnation-stop guards against runaway loops.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Personas / Who is this for -->
+<section id="personas">
+    <h2>Built For</h2>
+    <p class="subtitle">CheetahClaws adapts to your workflow — pick the closest match to see what you can do today.</p>
+    <div class="personas-grid">
+        <div class="persona-card">
+            <div class="role">Developers</div>
+            <h3>Ship Code Faster</h3>
+            <p>Plan-then-implement workflow, git-worktree sub-agents, checkpoint &amp; rewind, MCP integration. Bring your own model — Claude Sonnet for hard problems, local Ollama for the privacy-sensitive stuff.</p>
+            <div class="stack">
+                <span>/plan</span><span>/worker</span><span>/review</span><span>tmux</span><span>MCP</span>
+            </div>
+        </div>
+        <div class="persona-card">
+            <div class="role">Researchers</div>
+            <h3>Autonomous Research</h3>
+            <p>Multi-day research lab with PI / Engineer / Reviewer agents. 20-source pipeline (arXiv, Semantic Scholar, HuggingFace, 知乎, B站) with citation verification, attention heat tables, weekly trend tracking.</p>
+            <div class="stack">
+                <span>/research</span><span>/lab</span><span>/monitor</span><span>arXiv</span><span>20 sources</span>
+            </div>
+        </div>
+        <div class="persona-card">
+            <div class="role">Power Users</div>
+            <h3>Run 24/7 At Home</h3>
+            <p>Daemon mode + Docker on your home server. Control from phone via Telegram / WeChat / Slack. Voice input, PDF / Excel / Email parsing, cloud session sync — your personal AI butler.</p>
+            <div class="stack">
+                <span>daemon</span><span>Docker</span><span>Telegram</span><span>WeChat</span><span>Whisper</span>
+            </div>
+        </div>
+        <div class="persona-card">
+            <div class="role">Teams</div>
+            <h3>Self-Hosted Coding Bot</h3>
+            <p>Multi-user web UI with bcrypt + JWT auth. MCP HTTP/SSE + OAuth 2.0 PKCE for enterprise SSO. <code>ANTHROPIC_ENDPOINT</code> for corporate proxy. Plugin system for in-house tools.</p>
+            <div class="stack">
+                <span>multi-user</span><span>OAuth</span><span>SSE</span><span>proxy</span><span>plugins</span>
+            </div>
         </div>
     </div>
 </section>
@@ -853,107 +445,115 @@ accounting@company.com</span>
 <!-- More demos -->
 <section id="tools">
     <h2>More Demos</h2>
-    <p class="subtitle">See the full range of capabilities.</p>
-    <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-        <div class="feature-card">
+    <p class="subtitle">See the full range of capabilities — filter by what you care about.</p>
+    <div class="demo-tabs" role="tablist" aria-label="Demo categories">
+        <button class="demo-tab active" data-cat="all" role="tab" aria-selected="true">All <span class="count">20</span></button>
+        <button class="demo-tab" data-cat="coding" role="tab" aria-selected="false">Coding &amp; Workflow <span class="count">5</span></button>
+        <button class="demo-tab" data-cat="remote" role="tab" aria-selected="false">Remote Control <span class="count">3</span></button>
+        <button class="demo-tab" data-cat="agents" role="tab" aria-selected="false">Multi-Agent &amp; Autonomous <span class="count">4</span></button>
+        <button class="demo-tab" data-cat="multimodal" role="tab" aria-selected="false">Multimodal <span class="count">4</span></button>
+        <button class="demo-tab" data-cat="productivity" role="tab" aria-selected="false">Productivity <span class="count">4</span></button>
+    </div>
+    <div class="features-grid demos-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="feature-card demo-card" data-cat="productivity">
             <h3>Web Chat UI</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Full browser chat — sessions sidebar, tool cards, approval prompts, markdown streaming</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/web_demo.gif" alt="Web chat UI demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/web_demo.gif" alt="Web chat UI demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="agents">
             <h3>Multi-Agent Brainstorm</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Spawn expert personas to debate and synthesize ideas</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/brainstorm_demo.gif" alt="Brainstorm demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/brainstorm_demo.gif" alt="Brainstorm demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="agents">
             <h3>Autonomous Agent Mode</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Agent works proactively in the background without prompts</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/proactive_demo.gif" alt="Proactive demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/proactive_demo.gif" alt="Proactive demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="coding">
             <h3>SSJ Developer Power Menu</h3>
-            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">14 workflow shortcuts: brainstorm, review, commit, and more</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/ssj_demo.gif" alt="SSJ demo" style="width:100%;border-radius:8px;">
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">18 workflow shortcuts: brainstorm, review, commit, research, and more</p>
+            <img src="assets/demos/ssj_demo.gif" alt="SSJ demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="remote">
             <h3>Remote Control from Telegram</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Control your agent from your phone — send tasks, get results</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/telegram_demo.gif" alt="Telegram remote control demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/telegram_demo.gif" alt="Telegram remote control demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="remote">
             <h3>Remote Control from WeChat</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Control your agent from WeChat (微信) — scan QR, start chatting</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/wechat_demo.gif" alt="WeChat remote control demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/wechat_demo.gif" alt="WeChat remote control demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="remote">
             <h3>Remote Control from Slack</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Control your agent from a Slack channel — team-friendly</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/slack_demo.gif" alt="Slack remote control demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/slack_demo.gif" alt="Slack remote control demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="coding">
             <h3>Plan Mode</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Analyze codebase in read-only mode, write a plan, then implement</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/plan_demo.gif" alt="Plan mode demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/plan_demo.gif" alt="Plan mode demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="agents">
             <h3>Multi-Agent Sub-Tasks</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Spawn parallel sub-agents with git worktree isolation</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/subagent_demo.gif" alt="Sub-agent demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/subagent_demo.gif" alt="Sub-agent demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="productivity">
             <h3>Persistent Memory</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Save and recall facts, preferences, and decisions across sessions</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/memory_demo.gif" alt="Memory demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/memory_demo.gif" alt="Memory demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="multimodal">
             <h3>Multi-Model Switching</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Switch between Claude, GPT, Gemini, Ollama mid-conversation</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/multimodel_demo.gif" alt="Multi-model demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/multimodel_demo.gif" alt="Multi-model demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
-            <h3>Checkpoint & Rewind</h3>
+        <div class="feature-card demo-card" data-cat="productivity">
+            <h3>Checkpoint &amp; Rewind</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Auto-snapshot every turn — rewind files and conversation to any point</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/checkpoint_demo.gif" alt="Checkpoint demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/checkpoint_demo.gif" alt="Checkpoint demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="multimodal">
             <h3>Voice Input</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Speak your prompt — offline Whisper transcription, 99 languages</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/voice_demo.gif" alt="Voice input demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/voice_demo.gif" alt="Voice input demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="multimodal">
             <h3>Vision Input</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Paste an image and ask questions — works with local and cloud models</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/image_demo.gif" alt="Vision input demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/image_demo.gif" alt="Vision input demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="multimodal">
             <h3>AI Video Factory</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Generate videos: story &rarr; TTS narration &rarr; AI images &rarr; subtitles &rarr; MP4</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/video_demo.gif" alt="Video factory demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/video_demo.gif" alt="Video factory demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="coding">
             <h3>Worker — Auto-Implement Tasks</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Automatically implement TODO items from brainstorm output</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/worker_demo.gif" alt="Worker demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/worker_demo.gif" alt="Worker demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="coding">
             <h3>Tmux Terminal Control</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Split panes, run long tasks, capture output — 11 tmux tools</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/tmux_demo.gif" alt="Tmux demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/tmux_demo.gif" alt="Tmux demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="productivity">
             <h3>Cloud Session Sync</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Backup conversations to GitHub Gist — resume from any machine</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/cloudsave_demo.gif" alt="Cloud sync demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/cloudsave_demo.gif" alt="Cloud sync demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="agents">
             <h3>Trading Agent</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Autonomous trading agent — monitor markets, analyze signals, execute strategies</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/trading_demo.gif" alt="Trading agent demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/trading_demo.gif" alt="Trading agent demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
-        <div class="feature-card">
+        <div class="feature-card demo-card" data-cat="coding">
             <h3>Shell Escape</h3>
             <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.5rem;">Run any shell command inline with !command — git, ls, python, etc.</p>
-            <img src="https://github.com/SafeRL-Lab/cheetahclaws/raw/main/docs/shell_escape_demo.gif" alt="Shell escape demo" style="width:100%;border-radius:8px;">
+            <img src="assets/demos/shell_escape_demo.gif" alt="Shell escape demo" loading="lazy" decoding="async" width="640" height="480" style="width:100%;border-radius:8px;">
         </div>
     </div>
 </section>
@@ -1093,19 +693,78 @@ accounting@company.com</span>
     </div>
 </section>
 
+<!-- FAQ -->
+<section id="faq">
+    <h2>Frequently Asked Questions</h2>
+    <p class="subtitle">Quick answers to the questions everyone asks first.</p>
+    <div class="faq">
+        <details>
+            <summary>How much does CheetahClaws cost?</summary>
+            <div class="answer">CheetahClaws itself is <strong>free and open source</strong> (Apache-2.0). You only pay your model provider's API fees — which can be <strong>$0 if you use Ollama / LM Studio / vLLM</strong> with local models, or pennies per task with DeepSeek, GPT-4o-mini, or Gemini Flash.</div>
+        </details>
+        <details>
+            <summary>Do I need an Anthropic / OpenAI API key?</summary>
+            <div class="answer">No. CheetahClaws works with <strong>any OpenAI-compatible endpoint</strong> — including fully local models via Ollama. First run, <code>cheetahclaws --setup</code> will let you pick. Switch providers anytime with <code>/model</code>.</div>
+        </details>
+        <details>
+            <summary>How is this different from Claude Code?</summary>
+            <div class="answer">Claude Code is closed-source and Anthropic-only. CheetahClaws is a Python-native, Apache-2.0 reimplementation that supports <strong>10+ providers</strong> (Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, GLM, Ollama, vLLM, LM Studio…), adds an <strong>Agent-OS kernel</strong>, autonomous <strong>Research Lab</strong>, <strong>daemon mode</strong>, and <strong>Telegram / WeChat / Slack</strong> bridges. See the <a href="#compare">full comparison &rarr;</a></div>
+        </details>
+        <details>
+            <summary>Can I run it fully offline?</summary>
+            <div class="answer">Yes. Install Ollama, run <code>cheetahclaws --model ollama/qwen2.5-coder</code>, and nothing leaves your machine. Voice input also runs offline (local Whisper, 99 languages). Vision works with local vision models like <code>llava</code> / <code>gemma4</code>.</div>
+        </details>
+        <details>
+            <summary>What hardware do I need?</summary>
+            <div class="answer">For cloud models — any laptop. For local models — depends on the model size. A 7B-parameter model runs comfortably on 16 GB RAM (CPU-only is fine for casual use; GPU/Apple-Silicon recommended). The daemon mode is designed to run on a $100 mini-PC home server.</div>
+        </details>
+        <details>
+            <summary>Is it safe to give it shell access?</summary>
+            <div class="answer">Permission system with three modes: <code>auto</code> / <code>manual</code> / <code>plan</code>. Plan mode is read-only — perfect for code review. Manual mode prompts you on every shell command. Built-in prompt-injection detection, credential filtering in <code>/config</code>, and a safe stdio wrapper. All open source — read the code.</div>
+        </details>
+        <details>
+            <summary>Can I extend it with my own tools?</summary>
+            <div class="answer">Yes. Two ways: (1) <strong>Plugins</strong> — install from any git URL via <code>CHEETAHCLAWS_PLUGIN_PATH</code>, contribute custom tools / commands / skills / MCP servers; (2) <strong>MCP</strong> — connect any MCP-compatible server over stdio, HTTP, or SSE with OAuth 2.0 PKCE.</div>
+        </details>
+        <details>
+            <summary>Does it work on Windows / WSL?</summary>
+            <div class="answer">Yes — macOS, Linux, Windows (native + WSL). Python 3.10 – 3.13 supported. Tmux integration uses <code>psmux</code> on Windows automatically. Docker setup gives identical behavior everywhere.</div>
+        </details>
+        <details>
+            <summary>How do I report bugs or request features?</summary>
+            <div class="answer">Open an issue on <a href="https://github.com/SafeRL-Lab/cheetahclaws/issues" target="_blank" rel="noopener">GitHub Issues</a>. Pull requests welcome — see <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">CONTRIBUTING.md</a>. The dev team ships multiple times per week — your issue will be seen quickly.</div>
+        </details>
+    </div>
+</section>
+
+<!-- Citation -->
+<section id="citation">
+    <h2>Cite CheetahClaws</h2>
+    <p class="subtitle">Using CheetahClaws in your research? Please cite the project.</p>
+    <div class="citation">
+        <pre id="citation-bibtex"><button class="citation-copy" id="citation-copy" type="button">Copy</button>@article{cheetahclaws2026,
+  title={CheetahClaws: An Extensible, Python-Native Agent System for Autonomous Multi-Model Workflows},
+  author={CheetahClaws Team},
+  journal={github},
+  year={2026}
+}</pre>
+    </div>
+</section>
+
 <!-- CTA -->
 <div class="cta-section">
     <h2>Start Building in <span style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">30 Seconds</span></h2>
     <p>One command to install. First run guides you through setup. No build step, no daemon, no subscription.</p>
     <div class="actions" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws">Get Started</a>
+        <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws#installation">Get Started</a>
         <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/reference.md">Read the Docs</a>
         <a class="btn-secondary" href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/CONTRIBUTING.md">Contribute</a>
     </div>
     <div class="install-bar" style="margin-top:2rem;max-width:600px;margin-left:auto;margin-right:auto;">
-        <code>pip install git+https://github.com/SafeRL-Lab/cheetahclaws.git && cheetahclaws --setup</code>
+        <code>pip install git+https://github.com/SafeRL-Lab/cheetahclaws.git &amp;&amp; cheetahclaws --setup</code>
     </div>
 </div>
+</main>
 
 <!-- Footer -->
 <footer>
@@ -1168,6 +827,159 @@ document.addEventListener('keydown', e => {
             localStorage.setItem('cc-theme', next);
         });
     }
+})();
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('menu-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
+
+// Install command tabs
+(function() {
+    const commands = {
+        curl:   'curl -fsSL https://raw.githubusercontent.com/SafeRL-Lab/cheetahclaws/main/scripts/install.sh | bash',
+        pip:    'pip install git+https://github.com/SafeRL-Lab/cheetahclaws.git && cheetahclaws --setup',
+        uv:     'uv pip install git+https://github.com/SafeRL-Lab/cheetahclaws.git && cheetahclaws --setup',
+        docker: 'git clone https://github.com/SafeRL-Lab/cheetahclaws.git && cd cheetahclaws && docker-compose up -d'
+    };
+    const tabs = document.querySelectorAll('.install-tab');
+    const cmdEl = document.getElementById('install-cmd');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            cmdEl.textContent = commands[tab.dataset.cmd] || commands.curl;
+        });
+    });
+
+    const copyBtn = document.getElementById('install-copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(cmdEl.innerText);
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
+        });
+    }
+})();
+
+// Demo category filter
+(function() {
+    const tabs = document.querySelectorAll('.demo-tab');
+    const cards = document.querySelectorAll('.demo-card');
+    if (!tabs.length || !cards.length) return;
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const cat = tab.dataset.cat;
+            tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            cards.forEach(card => {
+                const match = cat === 'all' || card.dataset.cat === cat;
+                card.classList.toggle('hidden', !match);
+            });
+        });
+    });
+})();
+
+// Scroll-spy: highlight current section in nav
+(function() {
+    const sectionIds = ['whats-new','personas','features','models','examples','tools','compare','faq'];
+    const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+    const navLinks = new Map();
+    sectionIds.forEach(id => {
+        const link = document.querySelector(`nav .links a[href="#${id}"]`);
+        if (link) navLinks.set(id, link);
+    });
+    if (!sections.length || !navLinks.size || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                const link = navLinks.get(e.target.id);
+                if (link) link.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    sections.forEach(s => observer.observe(s));
+})();
+
+// Animated count-up stats
+(function() {
+    const nums = document.querySelectorAll('.stat-num[data-count]');
+    if (!nums.length || !('IntersectionObserver' in window)) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const format = (val, n) => {
+        const suffix = n.dataset.suffix || '';
+        if (n.dataset.format === 'comma') {
+            return val.toLocaleString('en-US') + suffix;
+        }
+        return val + suffix;
+    };
+    const animate = n => {
+        const target = parseInt(n.dataset.count, 10);
+        if (reduce) { n.textContent = format(target, n); return; }
+        const duration = 1400;
+        const start = performance.now();
+        const step = now => {
+            const t = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            n.textContent = format(Math.round(target * eased), n);
+            if (t < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    };
+    const obs = new IntersectionObserver((entries, o) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { animate(e.target); o.unobserve(e.target); }
+        });
+    }, { threshold: 0.4 });
+    nums.forEach(n => obs.observe(n));
+})();
+
+// Citation copy
+(function() {
+    const btn = document.getElementById('citation-copy');
+    const pre = document.getElementById('citation-bibtex');
+    if (!btn || !pre) return;
+    btn.addEventListener('click', () => {
+        const text = pre.innerText.replace(/^Copy\s*/, '').trim();
+        navigator.clipboard.writeText(text);
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+    });
+})();
+
+</script>
+
+<!-- asciinema player -->
+<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.7.1/dist/bundle/asciinema-player.min.js"></script>
+<script>
+(function() {
+    const host = document.getElementById('ascii-demo');
+    if (!host || !window.AsciinemaPlayer) return;
+    AsciinemaPlayer.create('assets/demo.cast', host, {
+        autoPlay: true,
+        loop: true,
+        idleTimeLimit: 1.2,
+        theme: 'monokai',
+        fit: 'width',
+        cols: 100,
+        rows: 28,
+        terminalFontSize: '14px',
+        controls: true,
+        speed: 1.0
+    });
 })();
 </script>
 
