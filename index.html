@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CheetahClaws — A Fast and Easy-to-Use Agent Harness Infrastructure for Long-Horizon, Multi-Model, and Tool-Using AI Systems · v3.05.80</title>
+    <title>CheetahClaws — A Fast and Easy-to-Use Agent Harness Infrastructure for Long-Horizon, Multi-Model, and Tool-Using AI Systems · v3.5.87</title>
     <meta name="description" content="CheetahClaws: Agent Harness Infrastructure for any model — Claude, GPT, Gemini, DeepSeek V4, Qwen, Ollama. Agent-OS kernel, Research Lab, Daemon mode, Telegram/WeChat/Slack remote control, 33+ built-in tools. Runs 24/7, open source (Apache-2.0).">
     <meta name="keywords" content="AI assistant, Claude Code alternative, open source AI agent, Python AI agent, multi-model AI, Ollama agent, autonomous research agent, MCP, agent OS, DeepSeek, Qwen, local LLM, Telegram bot, WeChat bot">
     <meta name="author" content="SAIL Lab (UC Berkeley)">
@@ -14,7 +14,7 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="CheetahClaws — Fast Personal AI Assistant for Any Model">
-    <meta property="og:description" content="Python-native AI assistant supporting any model. Agent-OS kernel, autonomous Research Lab, 24/7 daemon mode, Telegram/WeChat/Slack remote control, 1900+ tests. Apache-2.0.">
+    <meta property="og:description" content="Python-native AI assistant supporting any model. Agent-OS kernel, autonomous Research Lab, 24/7 daemon mode, Telegram/WeChat/Slack remote control, 2,700+ tests. Apache-2.0.">
     <meta property="og:url" content="https://cheetahclaws.github.io/">
     <meta property="og:site_name" content="CheetahClaws">
     <meta property="og:image" content="https://cheetahclaws.github.io/logo.png">
@@ -42,7 +42,7 @@
       "alternateName": "Nano Claude Code",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
-      "softwareVersion": "3.05.80",
+      "softwareVersion": "3.5.87",
       "datePublished": "2026-05-10",
       "description": "Python-native AI assistant supporting any model — Claude, GPT, Gemini, DeepSeek, Qwen, Ollama. Agent-OS kernel, Research Lab, daemon mode, remote control bridges, 33+ built-in tools.",
       "url": "https://cheetahclaws.github.io/",
@@ -73,7 +73,7 @@
     <div class="inner">
         <a href="#" class="logo" aria-label="CheetahClaws home">
             <img src="logo.png" alt="CheetahClaws" style="height:36px;">
-            <span class="version-chip"><span class="dot"></span>v3.05.80</span>
+            <span class="version-chip"><span class="dot"></span>v3.5.87</span>
         </a>
         <div class="links" id="nav-links">
             <a href="#whats-new">What's New</a>
@@ -116,8 +116,8 @@
         <a href="https://github.com/SafeRL-Lab/cheetahclaws/stargazers" target="_blank" rel="noopener"><img src="https://img.shields.io/github/stars/SafeRL-Lab/cheetahclaws?style=for-the-badge&logo=github&color=22d3ee" alt="GitHub stars"></a>
         <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/LICENSE" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/license-Apache_2.0-a78bfa?style=for-the-badge" alt="Apache 2.0"></a>
         <img src="https://img.shields.io/badge/python-3.10%E2%80%933.13-34d399?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10–3.13">
-        <img src="https://img.shields.io/badge/tests-1900%2B%20passing-34d399?style=for-the-badge" alt="1900+ tests passing">
-        <img src="https://img.shields.io/badge/version-v3.05.80-f472b6?style=for-the-badge" alt="v3.05.80">
+        <img src="https://img.shields.io/badge/tests-2769%20passing-34d399?style=for-the-badge" alt="2769 tests passing">
+        <img src="https://img.shields.io/badge/version-v3.5.87-f472b6?style=for-the-badge" alt="v3.5.87">
     </div>
     <div class="actions">
         <a class="btn-primary" href="https://github.com/SafeRL-Lab/cheetahclaws#installation">Get Started</a>
@@ -137,9 +137,9 @@
 
 <!-- What's New banner -->
 <div class="whats-new" id="whats-new-banner" role="region" aria-label="Latest release">
-    <span class="tag">NEW · v3.05.80</span>
+    <span class="tag">NEW · v3.5.87</span>
     <div class="text">
-        <strong>Agent-OS kernel v1.0</strong> · <strong>Research Lab</strong> (autonomous multi-day research) · <strong>Daemon mode</strong> (<code>cheetahclaws serve</code>) · <strong>Docker / home-server</strong> · <strong>MCP HTTP/SSE + OAuth 2.0</strong> · <strong>20-source research</strong> incl. 知乎 · B站 · 微博 · 小红书 · <strong>Web Chat UI</strong> with folders &amp; multi-user auth.
+        <strong>Fewer permission prompts</strong> — approval is asked only for actions that can change your files, run arbitrary code, or reach outside the session · <strong>OpenRouter</strong> as a first-class provider (one key, 400+ models) · <strong>Agent-OS kernel v1.0</strong> · <strong>Research Lab</strong> · <strong>Daemon mode</strong> (<code>cheetahclaws serve</code>) · <strong>Docker / home-server</strong> · <strong>Web Chat UI</strong>.
     </div>
     <a href="#whats-new">See what shipped &rarr;</a>
 </div>
@@ -160,7 +160,7 @@
             <div class="stat-label">Built-in Tools</div>
         </div>
         <div>
-            <div class="stat-num" data-count="10" data-suffix="+">10+</div>
+            <div class="stat-num" data-count="11" data-suffix="+">11+</div>
             <div class="stat-label">Model Providers</div>
         </div>
         <div>
@@ -168,18 +168,28 @@
             <div class="stat-label">Lines of Python</div>
         </div>
         <div>
-            <div class="stat-num" data-count="1900" data-suffix="+" data-format="comma">1,900+</div>
+            <div class="stat-num" data-count="2769" data-format="comma">2,769</div>
             <div class="stat-label">Tests Passing</div>
         </div>
     </div>
 </section>
 
-<!-- What's New in v3.05.79 -->
+<!-- What's New in v3.5.87 -->
 <section id="whats-new">
-    <h2>What&rsquo;s New in v3.05.79</h2>
+    <h2>What&rsquo;s New in v3.5.87</h2>
     <p class="subtitle">Active development — major upgrades shipped in the last 30 days. <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/news.md" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Full changelog &rarr;</a></p>
 
     <div class="features-grid">
+        <div class="feature-card">
+            <div class="icon">&#128275;</div>
+            <h3>Permission Prompts, Only Where They Matter</h3>
+            <p>Approval is asked for one class of action: anything that can <strong>change your files, run arbitrary code, or reach outside the session</strong>. Every read-only tool, read-only shell <em>pipeline</em> (<code>git log | head -20</code>), and creating a new file in the workspace now runs silently. Answer <code>s</code> at a prompt to allow <em>that one command or file</em> for the session &mdash; a scoped alternative to accept-all. <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/security.md#what-runs-without-asking-auto-mode" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">How it decides &rarr;</a></p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128737;</div>
+            <h3>OpenRouter &mdash; One Key, 400+ Models</h3>
+            <p><code>/model openrouter/deepseek/deepseek-v4-flash</code> reaches Claude, GPT, Gemini, DeepSeek, Llama and Qwen through a single key. Pin which upstream serves the request with <code>@gmicloud/fp8</code>. Shipped with four gateway-routing fixes &mdash; correct provider detection, per-model cost and context windows. <a href="https://github.com/SafeRL-Lab/cheetahclaws/blob/main/docs/guides/usage.md#openrouter-400-models-one-key" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Setup &rarr;</a></p>
+        </div>
         <div class="feature-card">
             <div class="icon">&#129504;</div>
             <h3>Agent-OS Kernel v1.0</h3>
@@ -277,7 +287,7 @@
         <div class="feature-card">
             <div class="icon">&#9889;</div>
             <h3>Multi-Provider</h3>
-            <p>Claude, GPT-4o, Gemini, DeepSeek, Qwen, Kimi, MiniMax, Ollama, or any OpenAI-compatible endpoint. Switch with <code>/model</code>.</p>
+            <p>Claude, GPT-4o, Gemini, DeepSeek, Qwen, Kimi, MiniMax, OpenRouter (400+ models behind one key), Ollama, or any OpenAI-compatible endpoint. Switch with <code>/model</code>.</p>
         </div>
         <div class="feature-card">
             <div class="icon">&#128187;</div>
@@ -297,7 +307,7 @@
         <div class="feature-card">
             <div class="icon">&#128274;</div>
             <h3>Security</h3>
-            <p>Permission system (auto/manual/plan modes), prompt injection detection, credential filtering in /config, safe stdio wrapper.</p>
+            <p>Permission system with five modes (auto / accept-edits / accept-all / manual / plan) that prompts only for file changes, arbitrary code execution, and anything reaching outside the session; hard denylist for host-destroying commands in every mode; prompt injection detection, credential filtering in /config, safe stdio wrapper.</p>
         </div>
         <div class="feature-card">
             <div class="icon">&#128640;</div>
@@ -325,7 +335,7 @@
 <!-- Models -->
 <section id="models">
     <h2>Works With Every Model</h2>
-    <p class="subtitle">10+ providers, 200+ models. Cloud or local — your choice.</p>
+    <p class="subtitle">11+ providers, 400+ models via OpenRouter alone. Cloud or local — your choice.</p>
     <div class="providers">
         <span class="provider-chip">Anthropic Claude</span>
         <span class="provider-chip">OpenAI GPT-4o / GPT-5</span>
@@ -335,6 +345,7 @@
         <span class="provider-chip">Moonshot Kimi</span>
         <span class="provider-chip">Zhipu GLM</span>
         <span class="provider-chip">MiniMax</span>
+        <span class="provider-chip">OpenRouter (400+ models)</span>
         <span class="provider-chip">Ollama (local)</span>
         <span class="provider-chip">LM Studio</span>
         <span class="provider-chip">vLLM</span>
@@ -588,7 +599,7 @@ accounting@company.com</span>
                 </tr>
                 <tr>
                     <th>Model providers</th>
-                    <td class="highlight-col"><span class="check">✓</span> 10+ providers, 200+ models — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, GLM, MiniMax, Ollama, vLLM, LM Studio</td>
+                    <td class="highlight-col"><span class="check">✓</span> 11+ providers — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, GLM, MiniMax, Ollama, vLLM, LM Studio, plus OpenRouter for 400+ more behind one key</td>
                     <td>Cloud-first, primarily one frontier provider</td>
                     <td><span class="cross">✗</span> Anthropic Claude only</td>
                 </tr>
@@ -708,7 +719,7 @@ accounting@company.com</span>
         </details>
         <details>
             <summary>How is this different from Claude Code?</summary>
-            <div class="answer">Claude Code is closed-source and Anthropic-only. CheetahClaws is a Python-native, Apache-2.0 reimplementation that supports <strong>10+ providers</strong> (Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, GLM, Ollama, vLLM, LM Studio…), adds an <strong>Agent-OS kernel</strong>, autonomous <strong>Research Lab</strong>, <strong>daemon mode</strong>, and <strong>Telegram / WeChat / Slack</strong> bridges. See the <a href="#compare">full comparison &rarr;</a></div>
+            <div class="answer">Claude Code is closed-source and Anthropic-only. CheetahClaws is a Python-native, Apache-2.0 reimplementation that supports <strong>11+ providers</strong> (Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama, vLLM, LM Studio…), adds an <strong>Agent-OS kernel</strong>, autonomous <strong>Research Lab</strong>, <strong>daemon mode</strong>, and <strong>Telegram / WeChat / Slack</strong> bridges. See the <a href="#compare">full comparison &rarr;</a></div>
         </details>
         <details>
             <summary>Can I run it fully offline?</summary>
